@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies | StreamVerse</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <div id="header-container"></div>
+
+    <main>
+        <section class="movie-grid-section">
+            <h2 class="section-title">All Movies</h2>
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label for="genre-filter">Genre:</label>
+                    <select id="genre-filter">
+                        <option value="all">All Genres</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="sort-by">Sort By:</label>
+                    <select id="sort-by">
+                        <option value="rating">Rating</option>
+                        <option value="newest">Newest</option>
+                        <option value="title">Title</option>
+                    </select>
+                </div>
+            </div>
+            <div class="movies-grid" id="movies-container">
+                <!-- Movies will be populated by JavaScript -->
+            </div>
+            <div class="pagination" id="pagination-controls"></div>
+        </section>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script src="js/templates.js"></script>
+    <script src="js/movieApi.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/category.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMovies('movie');
+        });
+    </script>
+</body>
+</html>

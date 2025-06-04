@@ -1,0 +1,20 @@
+{
+  "8 body problem": [
+    {
+      "episodeNumber": 1,
+      "title": "The Awakening",
+      "description": "Lyra discovers her magical powers in a world where technology fails.",
+      "duration": "45m",
+      "thumbnail": "https://readdy.ai/api/search-image?query=fantasy%20series%20episode%20thumbnail%20magic%20awakening&width=400&height=225&seq=1&orientation=landscape",
+      "videoUrl": "/videos/8-body-problem/ep1.mp4"
+    },
+    {
+      "episodeNumber": 2,
+      "title": "The Engineer's Secret",
+      "description": "Kael reveals his technological breakthrough to Lyra.",
+      "duration": "42m",
+      "thumbnail": "https://readdy.ai/api/search-image?query=fantasy%20series%20episode%20thumbnail%20steampunk%20technology&width=400&height=225&seq=2&orientation=landscape",
+      "videoUrl": "/videos/8-body-problem/ep2.mp4"
+    }
+  ]
+}

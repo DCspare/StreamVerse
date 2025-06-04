@@ -1,0 +1,65 @@
+{
+  "interstellar": {
+    "trailers": {
+      "Original": "https://www.youtube.com/embed/zSWdZVtXT7E?si=oda733G2aUP3d4Ln",
+      "Hindi": "https://www.youtube.com/embed/4REFMXawFEA?si=mXHUgYmbK5du2kbU"
+    },
+    "screenshots": [
+      "https://readdy.ai/api/search-image?query=interstellar%20odyssey%20screenshot%20space%20ship%20interior&width=800&height=450&seq=1&orientation=landscape",
+      "https://readdy.ai/api/search-image?query=interstellar%20odyssey%20screenshot%20new%20planet%20landscape&width=800&height=450&seq=2&orientation=landscape",
+      "https://readdy.ai/api/search-image?query=interstellar%20odyssey%20screenshot%20wormhole%20effect&width=800&height=450&seq=3&orientation=landscape"
+    ]
+  },
+  "8 body problem": {
+    "trailers": {
+      "Official": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    },
+    "screenshots": [
+      "https://readdy.ai/api/search-image?query=mystic%20chronicles%20screenshot%20magic%20city&width=800&height=450&seq=1&orientation=landscape",
+      "https://readdy.ai/api/search-image?query=mystic%20chronicles%20screenshot%20forest%20battle&width=800&height=450&seq=2&orientation=landscape",
+      "https://readdy.ai/api/search-image?query=mystic%20chronicles%20screenshot%20ancient%20ruins&width=800&height=450&seq=3&orientation=landscape"
+    ]
+  },
+  "attack on titan": {
+    "trailers": {
+      "Official": "https://www.youtube.com/embed/F_y_gJ-y-1M"
+    },
+    "screenshots": [
+      "https://readdy.ai/api/search-image?query=spirit%20blade%20anime%20screenshot%20sword%20fight&width=800&height=450&seq=1&orientation=landscape",
+      "https://readdy.ai/api/search-image?query=spirit%20blade%20anime%20screenshot%20cityscape&width=800&height=450&seq=2&orientation=landscape",
+      "https://readdy.ai/api/search-image?query=spirit%20blade%20anime%20screenshot%20character%20close-up&width=800&height=450&seq=3&orientation=landscape"
+    ]
+  },
+  "Extraction": {
+    "trailers": {
+      "Official": "https://www.youtube.com/embed/M7lc1UVf-VE"
+    },
+    "screenshots": [
+      "https://readdy.ai/api/search-image?query=echoes%20of%20heart%20screenshot%20family%20dinner&width=800&height=450&seq=1&orientation=landscape",
+      "https://readdy.ai/api/search-image?query=echoes%20of%20heart%20screenshot%20old%20photo&width=800&height=450&seq=2&orientation=landscape",
+      "https://readdy.ai/api/search-image?query=echoes%20of%20heart%20screenshot%20emotional%20moment&width=800&height=450&seq=3&orientation=landscape"
+    ]
+  },
+  "Avatar": {
+    "trailers": {
+      "Official": "https://www.youtube.com/embed/LXb3EKWsInQ"
+    },
+    "screenshots": [
+      "https://readdy.ai/api/search-image?query=lost%20kingdom%20screenshot%20ancient%20temple&width=800&height=450&seq=1&orientation=landscape",
+      "https://readdy.ai/api/search-image?query=lost%20kingdom%20screenshot%20jungle%20expedition&width=800&height=450&seq=2&orientation=landscape",
+      "https://readdy.ai/api/search-image?query=lost%20kingdom%20screenshot%20artifact%20discovery&width=800&height=450&seq=3&orientation=landscape"
+    ]
+  },
+  "the-silent-echo": {
+    "trailers": {},
+    "screenshots": []
+  },
+  "quantum-breach": {
+    "trailers": {},
+    "screenshots": []
+  },
+  "crystal-guardians": {
+    "trailers": {},
+    "screenshots": []
+  }
+}

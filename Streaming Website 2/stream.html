@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamVerse - Player</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Header will be loaded by templates.js -->
+    <div id="header-placeholder"></div>
+
+    <main class="container">
+        <section class="video-player-container">
+            <div class="video-wrapper">
+                <video id="mainVideo" controls>
+                    <source src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+
+            <div class="video-info">
+                <h1 id="videoTitle"></h1>
+                <div class="video-meta">
+                    <span id="videoYear"></span>
+                    <span class="separator-dot">•</span>
+                    <span id="videoDuration"></span>
+                    <span class="separator-dot">•</span>
+                    <span id="videoGenres"></span>
+                </div>
+                <p id="videoDescription" class="video-description"></p>
+            </div>
+
+            <!-- Episode selector for series -->
+            <div id="episodeSelector" class="episode-selector hidden">
+                <h2>Episodes</h2>
+                <div class="episodes-grid" id="episodesGrid"></div>
+            </div>
+
+            <!-- Related content -->
+            <div class="related-content">
+                <h2>More Like This</h2>
+                <div class="content-row" id="relatedContent"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer will be loaded by templates.js -->
+    <div id="footer-placeholder"></div>
+
+    <script src="js/movieApi.js"></script>
+    <script src="js/templates.js"></script>
+    <script src="js/stream.js"></script>
+</body>
+</html>
