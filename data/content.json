@@ -42,7 +42,7 @@
     "description": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
     "fullDescription": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.",
     "year": "2010",
-    "duration": "2h 28m",
+    "duration": "",
     "genres": [
       "Action",
       "Sci-Fi",
@@ -55,8 +55,8 @@
       "Joseph Gordon-Levitt",
       "Elliot Page"
     ],
-    "posterImage": "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_FMjpg_UY474_.jpg 319w",
-    "heroImage": "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_FMjpg_UY474_.jpg 319w",
+    "posterImage": "https://res.cloudinary.com/dunh6afvy/image/upload/v1749893555/edv5CZvWj09upOsy2Y6IwDhK8bt_rewa1z.jpg",
+    "heroImage": "https://res.cloudinary.com/dunh6afvy/image/upload/v1749894546/zlIBglEnHkxmPGVwEfywC7hXncb_vyxa9s.jpg",
     "tags": [
       "trending"
     ],
@@ -154,8 +154,8 @@
       "Robin Wright",
       "Gary Sinise"
     ],
-    "posterImage": "https://m.media-amazon.com/images/M/MV5BNDYwNzVjMTItZmU5YS00YjQ5LTljYjgtMjY2NDVmYWMyNWFmXkEyXkFqcGc@._V1_FMjpg_UY463_.jpg 319w",
-    "heroImage": "https://c4.wallpaperflare.com/wallpaper/539/710/449/movies-forrest-gump-wallpaper-preview.jpg",
+    "posterImage": "https://res.cloudinary.com/dunh6afvy/image/upload/f_auto,q_auto,w_500/v1749894836/yu26pJwGFUyqTJWMWo1mMgBFJ0N_vydj6b.jpg",
+    "heroImage": "https://res.cloudinary.com/dunh6afvy/image/upload/f_auto,q_auto,w_1920/v1749894759/ghgfzbEV7kbpbi1O8eIILKVXEA8_shhsgl.jpg",
     "tags": [],
     "languages": [
       "English"
