@@ -1,38 +1,39 @@
-document.addEventListener('DOMContentLoaded', async function() {
-    const moviesContentGrid = document.getElementById('moviesCategoryGrid');
-    const preloader = document.getElementById('preloader');
+import { getAllContent } from "./movieApi.js";
+import { createContentCard } from "./main.js";
 
-    if (moviesContentGrid) {
-        try {
-            // Fetch all content
-            const allContent = await getAllContent();
+document.addEventListener("DOMContentLoaded", async function () {
+  const moviesContentGrid = document.getElementById("moviesCategoryGrid");
+  const preloader = document.getElementById("preloader");
 
-            // Filter for movies
-            const movies = allContent.filter(item => item.type.toLowerCase() === 'movie');
+  if (moviesContentGrid) {
+    try {
+      const allContent = await getAllContent();
+      const movies = allContent.filter(
+        (item) => item.type.toLowerCase() === "movie"
+      );
 
-            // Populate the grid
-            moviesContentGrid.innerHTML = ''; // Clear existing content
-            if (movies.length > 0) {
-                movies.forEach(item => {
-                    const card = createContentCard(item);
-                    moviesContentGrid.appendChild(card);
-                });
-            } else {
-                moviesContentGrid.innerHTML = '<p>No movies found.</p>';
-            }
-        } catch (error) {
-            console.error("Error loading movie content:", error);
-            moviesContentGrid.innerHTML = '<p>Could not load content. Please try again later.</p>';
-        } finally {
-            // Hide the pre-loader
-            if (preloader) {
-                preloader.classList.add('loaded');
-            }
-        }
-    } else {
-        // If the grid doesn't exist for some reason, still hide the preloader
-        if (preloader) {
-            preloader.classList.add('loaded');
-        }
+      moviesContentGrid.innerHTML = "";
+      if (movies.length > 0) {
+        movies.forEach((item) => {
+          const card = createContentCard(item);
+          moviesContentGrid.appendChild(card);
+        });
+      } else {
+        moviesContentGrid.innerHTML =
+          '<p class="empty-message">No movies found.</p>';
+      }
+    } catch (error) {
+      console.error("Error loading movie content:", error);
+      moviesContentGrid.innerHTML =
+        '<p class="empty-message">Could not load content. Please try again later.</p>';
+    } finally {
+      if (preloader) {
+        preloader.classList.add("loaded");
+      }
     }
+  } else {
+    if (preloader) {
+      preloader.classList.add("loaded");
+    }
+  }
 });

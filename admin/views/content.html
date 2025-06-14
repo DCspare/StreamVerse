@@ -8,6 +8,10 @@
     <button id="add-content-btn" class="btn btn-primary">
       <i class="ri-add-line"></i> Add New Content
     </button>
+    <!-- NEW: Bulk Add Button -->
+    <button id="bulk-add-btn" class="btn btn-secondary">
+      <i class="ri-upload-cloud-2-line"></i> Bulk Add
+    </button>
     <div class="history-actions">
       <button id="undo-btn" class="btn btn-secondary" disabled>
         <i class="ri-arrow-go-back-line"></i> Undo
@@ -16,6 +20,17 @@
         <i class="ri-arrow-go-forward-line"></i> Redo
       </button>
     </div>
+  </div>
+  <!-- NEW: Bulk Actions Toolbar (initially hidden) -->
+  <div
+    id="bulk-actions-toolbar"
+    class="bulk-actions-container"
+    style="display: none"
+  >
+    <span id="selection-count">0 items selected</span>
+    <button id="delete-selected-btn" class="btn btn-danger">
+      <i class="ri-delete-bin-line"></i> Delete Selected
+    </button>
   </div>
   <input
     type="search"
@@ -29,6 +44,14 @@
   <table class="data-table">
     <thead>
       <tr>
+        <!-- NEW: Select all checkbox -->
+        <th class="checkbox-cell">
+          <input
+            type="checkbox"
+            id="select-all-checkbox"
+            title="Select all items"
+          />
+        </th>
         <th>Poster</th>
         <th>ID</th>
         <th>Title</th>
@@ -43,7 +66,7 @@
   </table>
 </div>
 
-<!-- Add/Edit Content Modal -->
+<!-- Add/Edit Content Modal (Existing - Unchanged) -->
 <div id="content-modal" class="modal-overlay">
   <div class="modal-content admin-modal">
     <button class="modal-close-btn close-modal">
@@ -253,6 +276,53 @@
           Cancel
         </button>
         <button type="submit" class="btn btn-primary">Save Content</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- NEW: Bulk Add Content Modal -->
+<div id="bulk-add-modal" class="modal-overlay">
+  <div class="modal-content admin-modal">
+    <button class="modal-close-btn close-modal">
+      <i class="ri-close-line ri-lg"></i>
+    </button>
+    <h2>Bulk Add Content</h2>
+    <p>
+      Paste an array of content objects in JSON format below. Each object must
+      have at least a <code>title</code>, <code>type</code>, and
+      <code>year</code>.
+    </p>
+    <form id="bulk-add-form">
+      <div class="form-group">
+        <label for="bulk-json-input">JSON Data</label>
+        <textarea
+          id="bulk-json-input"
+          class="form-input"
+          rows="15"
+          placeholder='[
+  {
+    "title": "New Movie 1",
+    "type": "movie",
+    "year": "2024",
+    "posterImage": "http://example.com/poster1.jpg",
+    "genres": ["Action", "Sci-Fi"]
+  },
+  {
+    "title": "New Series 2",
+    "type": "webseries",
+    "year": "2023",
+    "posterImage": "http://example.com/poster2.jpg",
+    "genres": ["Drama"]
+  }
+]'
+        ></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary close-modal">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary">Add Content</button>
       </div>
     </form>
   </div>

@@ -1,6 +1,20 @@
-// js/contentDetails.js (Corrected - Final for Watchlist)
+// FIXED: Import all necessary functions from their respective modules
+import {
+  getAllContent,
+  getContentById,
+  getMediaById,
+  getEpisodesById,
+  getCommentsById,
+  postComment,
+  postRequest,
+} from "./movieApi.js";
+import { ensureTemplatesLoaded } from "./templates.js";
+import { createContentCard, updateWatchlistButtonState } from "./main.js";
+import { showAuthModal } from "./auth.js";
+import { addToWatchlist } from "./watchlist.js";
+import { showNotification } from "./notifications.js";
 
-// --- GLOBAL HELPER ---
+// This helper function is local to this file. It doesn't need to be imported or exported for now.
 function createCustomDropdown(placeholderId, label, options, onSelectCallback) {
   const placeholder = document.getElementById(placeholderId);
   if (!placeholder) return;
@@ -60,14 +74,14 @@ document.addEventListener("click", () => {
     .forEach((t) => t.classList.remove("active"));
 });
 
-// --- MAIN EXECUTION ---
+// --- MAIN EXECUTION (No change to logic, just dependency access) ---
 document.addEventListener("DOMContentLoaded", async function () {
   const contentDetailSection = document.getElementById("contentDetailSection");
   const preloader = document.getElementById("preloader");
-  if (typeof ensureTemplatesLoaded === "function") {
-    await ensureTemplatesLoaded();
-  }
-  await getAllContent();
+
+  // FIXED: No need to check if function exists, it's imported.
+  await ensureTemplatesLoaded();
+  await getAllContent(); // Assuming this caches the content as before
 
   if (contentDetailSection) {
     try {
@@ -91,66 +105,64 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   window.addEventListener("userLoggedIn", updateCommentFormState);
-  
+
   initializePageEventListeners();
 });
 
 function initializePageEventListeners() {
-    const contentDetailSection = document.getElementById("contentDetailSection");
-    const lightbox = document.getElementById("screenshotLightbox");
-    const closeLightboxBtn = document.getElementById("closeLightboxBtn");
+  const contentDetailSection = document.getElementById("contentDetailSection");
+  const lightbox = document.getElementById("screenshotLightbox");
+  const closeLightboxBtn = document.getElementById("closeLightboxBtn");
 
-    if (contentDetailSection) {
-        contentDetailSection.addEventListener('click', (e) => {
-            const watchlistBtn = e.target.closest('.watchlist-icon-btn');
-            if (watchlistBtn) {
-                e.preventDefault();
-                const contentId = watchlistBtn.dataset.contentId;
-                // [THE FIX] Called the correct function from watchlist.js: addToWatchlist
-                if (contentId && typeof window.addToWatchlist === 'function') {
-                    window.addToWatchlist(contentId);
-                } else {
-                    console.error("Watchlist function not available or contentId missing.");
-                    showNotification("Could not update watchlist.", "error");
-                }
-            }
-        });
-    }
+  if (contentDetailSection) {
+    contentDetailSection.addEventListener("click", (e) => {
+      const watchlistBtn = e.target.closest(".watchlist-icon-btn");
+      if (watchlistBtn) {
+        e.preventDefault();
+        const contentId = watchlistBtn.dataset.contentId;
+        // FIXED: Direct call to imported function, no 'window' or type checking.
+        if (contentId) {
+          addToWatchlist(contentId);
+        } else {
+          console.error("Watchlist button missing contentId.");
+          showNotification("Could not update watchlist.", { type: "error" });
+        }
+      }
+    });
+  }
 
-    if (lightbox && closeLightboxBtn) {
-        closeLightboxBtn.addEventListener("click", closeLightbox);
-        lightbox.addEventListener("click", (e) => {
-            if (e.target.id === "screenshotLightbox") {
-                closeLightbox();
-            }
-        });
-    }
+  if (lightbox && closeLightboxBtn) {
+    closeLightboxBtn.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", (e) => {
+      if (e.target.id === "screenshotLightbox") {
+        closeLightbox();
+      }
+    });
+  }
 }
-
 
 async function displayContentDetails(contentId) {
-    const [item, mediaData, episodeData, allSubmissions] = await Promise.all([
-        getContentById(contentId),
-        getMediaById(contentId),
-        getEpisodesById(contentId),
-        getCommentsById(contentId),
-    ]);
-    if (!item) {
-        document.getElementById("contentDetailSection").innerHTML =
-            '<p class="empty-message">Content not found.</p>';
-        return;
-    }
-    populateBannerAndInfo(item);
-    displayMedia(mediaData, item.title);
-    if (item.type.toLowerCase() === "movie") {
-        displayMovieDownloads(mediaData.downloadLinks, item.title);
-    } else {
-        displaySeriesDownloads(episodeData, item.title);
-    }
-    displayCommentsAndForm(contentId, allSubmissions);
-    displayRelatedContent(item);
+  const [item, mediaData, episodeData, allSubmissions] = await Promise.all([
+    getContentById(contentId),
+    getMediaById(contentId),
+    getEpisodesById(contentId),
+    getCommentsById(contentId),
+  ]);
+  if (!item) {
+    document.getElementById("contentDetailSection").innerHTML =
+      '<p class="empty-message">Content not found.</p>';
+    return;
+  }
+  populateBannerAndInfo(item);
+  displayMedia(mediaData, item.title);
+  if (item.type.toLowerCase() === "movie") {
+    displayMovieDownloads(mediaData.downloadLinks, item.title);
+  } else {
+    displaySeriesDownloads(episodeData, item.title);
+  }
+  displayCommentsAndForm(contentId, allSubmissions);
+  displayRelatedContent(item);
 }
-
 
 function populateBannerAndInfo(item) {
   document.title = `StreamVerse - ${item.title}`;
@@ -174,9 +186,8 @@ function populateBannerAndInfo(item) {
   const watchlistBtn = document.querySelector(".watchlist-icon-btn");
   if (watchlistBtn) {
     watchlistBtn.dataset.contentId = item.id;
-    if (typeof window.updateWatchlistButtonState === "function") {
-      window.updateWatchlistButtonState(watchlistBtn, item.id);
-    }
+    // FIXED: Direct call to imported function.
+    updateWatchlistButtonState(watchlistBtn, item.id);
   }
 
   document.getElementById("contentYear").textContent = item.year || "N/A";
@@ -215,6 +226,9 @@ function populateBannerAndInfo(item) {
     item.description ||
     "No detailed storyline available.";
 }
+
+// NOTE: No changes were needed in the functions below, as their logic was already sound.
+// They will now work correctly by using the imported functions they depend on.
 
 function displayMedia(mediaData, title) {
   const mediaContainer = document.getElementById("mediaContainer");
@@ -272,7 +286,6 @@ function displayMovieDownloads(downloadLinks, title) {
     return;
   }
 
-  // [MODIFIED] Create a separate section for each download quality
   let linksHTML = '<div class="download-quality-options">';
 
   for (const quality in downloadLinks) {
@@ -286,7 +299,7 @@ function displayMovieDownloads(downloadLinks, title) {
     `;
   }
 
-  linksHTML += '</div>';
+  linksHTML += "</div>";
   movieSection.innerHTML = linksHTML;
 }
 
@@ -389,7 +402,7 @@ function displaySeriesDownloads(episodeData, title) {
 function updateCommentFormState() {
   const prompt = document.getElementById("commentLoginPrompt");
   const form = document.getElementById("commentForm");
-  const emailGroup = document.getElementById("comment-email-group"); 
+  const emailGroup = document.getElementById("comment-email-group");
   const emailInput = document.getElementById("comment-email");
   const usernameInput = document.getElementById("comment-username");
 
@@ -406,7 +419,7 @@ function updateCommentFormState() {
     if (currentUser) {
       prompt.classList.add("hidden");
       form.classList.remove("hidden");
-      emailGroup.classList.remove("hidden"); 
+      emailGroup.classList.remove("hidden");
       usernameInput.value = currentUser.username;
       emailInput.value = currentUser.email;
     } else {
@@ -422,130 +435,173 @@ function updateCommentFormState() {
 }
 
 function displayCommentsAndForm(contentId, allSubmissions = []) {
-    const commentsList = document.getElementById("commentsList");
-    const requestsList = document.getElementById("requestsList");
-    const commentsTab = document.querySelector('[data-tab="comments"] .tab-count');
-    const requestsTab = document.querySelector('[data-tab="requests"] .tab-count');
-    
-    commentsList.innerHTML = '';
-    requestsList.innerHTML = '';
+  const commentsList = document.getElementById("commentsList");
+  const requestsList = document.getElementById("requestsList");
+  const commentsTab = document.querySelector('[data-tab="comments"]');
+  const requestsTab = document.querySelector('[data-tab="requests"]');
 
-    const comments = allSubmissions.filter(s => s.type === 'comment');
-    const requests = allSubmissions.filter(s => s.type === 'request');
+  commentsList.innerHTML = "";
+  requestsList.innerHTML = "";
 
-    if (comments.length === 0) {
-        commentsList.innerHTML = '<p class="empty-message">No comments yet. Be the first to comment!</p>';
+  const comments = allSubmissions.filter((s) => s.type === "comment");
+  const requests = allSubmissions.filter((s) => s.type === "request");
+
+  if (comments.length === 0) {
+    commentsList.innerHTML =
+      '<p class="empty-message">No comments yet. Be the first to comment!</p>';
+  } else {
+    comments.forEach((c) => commentsList.appendChild(createCommentElement(c)));
+  }
+
+  if (requests.length === 0) {
+    requestsList.innerHTML =
+      '<p class="empty-message">No requests have been made for this content yet.</p>';
+  } else {
+    requests.forEach((r) => requestsList.appendChild(createCommentElement(r)));
+  }
+
+  // Note: The original HTML for tabs didn't have a .tab-count span. The logic here is preserved in case you add it back.
+  const commentsCountEl = commentsTab?.querySelector(".tab-count");
+  const requestsCountEl = requestsTab?.querySelector(".tab-count");
+  if (commentsCountEl) commentsCountEl.textContent = comments.length;
+  if (requestsCountEl) requestsCountEl.textContent = requests.length;
+
+  updateCommentFormState();
+
+  const commentForm = document.getElementById("commentForm");
+  const submitBtn = document.getElementById("commentSubmitBtn");
+  const commentText = document.getElementById("comment-text");
+  const typeDropdownPlaceholder = document.getElementById(
+    "comment-type-dropdown-placeholder"
+  );
+
+  const updateFormUI = (type) => {
+    if (type === "request") {
+      submitBtn.textContent = "Submit Request";
+      commentText.placeholder =
+        'e.g., "Request for 1080p version" or "Request for subtitles"';
     } else {
-        comments.forEach(c => commentsList.appendChild(createCommentElement(c)));
+      submitBtn.textContent = "Submit Comment";
+      commentText.placeholder = "Write a public comment...";
     }
+  };
 
-    if (requests.length === 0) {
-        requestsList.innerHTML = '<p class="empty-message">No requests have been made for this content yet.</p>';
-    } else {
-        requests.forEach(r => requestsList.appendChild(createCommentElement(r)));
-    }
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
 
-    if (commentsTab) commentsTab.textContent = comments.length;
-    if (requestsTab) requestsTab.textContent = requests.length;
+    const typeTrigger = typeDropdownPlaceholder.querySelector(
+      ".custom-select-trigger"
+    );
+    const type = typeTrigger ? typeTrigger.dataset.value : "";
+    const text = commentText.value.trim();
+    const loggedInUserEmail = localStorage.getItem("loggedInUser");
 
-    updateCommentFormState();
+    if (!loggedInUserEmail)
+      return showNotification("You must be logged in to post.", {
+        type: "error",
+      });
+    if (!type)
+      return showNotification(
+        "Please select a submission type (Comment or Request).",
+        { type: "error" }
+      );
+    if (!text)
+      return showNotification("Please enter a message.", { type: "error" });
 
-    const commentForm = document.getElementById("commentForm");
-    const submitBtn = document.getElementById("commentSubmitBtn");
-    const commentText = document.getElementById("comment-text");
-    const typeDropdownPlaceholder = document.getElementById("comment-type-dropdown-placeholder");
+    const users = JSON.parse(localStorage.getItem("streamVerseUsers") || "[]");
+    const currentUser = users.find((u) => u.email === loggedInUserEmail);
 
-    const updateFormUI = (type) => {
-        if (type === 'request') {
-            submitBtn.textContent = "Submit Request";
-            commentText.placeholder = 'e.g., "Request for 1080p version" or "Request for subtitles"';
-        } else {
-            submitBtn.textContent = "Submit Comment";
-            commentText.placeholder = 'Write a public comment...';
-        }
+    if (!currentUser)
+      return showNotification("Could not verify user. Please log in again.", {
+        type: "error",
+      });
+
+    const submissionData = {
+      text: text,
+      user: { name: currentUser.username, email: currentUser.email },
     };
 
-    const handleFormSubmit = async (event) => {
-        event.preventDefault();
-        
-        const typeTrigger = typeDropdownPlaceholder.querySelector(".custom-select-trigger");
-        const type = typeTrigger ? typeTrigger.dataset.value : "";
-        const text = commentText.value.trim();
-        const loggedInUserEmail = localStorage.getItem("loggedInUser");
+    try {
+      let savedPost;
+      if (type === "comment") {
+        savedPost = await postComment(contentId, submissionData);
+        if (commentsList.querySelector(".empty-message"))
+          commentsList.innerHTML = "";
+        commentsList.prepend(createCommentElement(savedPost));
+        if (commentsCountEl)
+          commentsCountEl.textContent =
+            parseInt(commentsCountEl.textContent, 10) + 1;
+      } else {
+        // type === 'request'
+        submissionData.contentId = contentId;
+        savedPost = await postRequest(submissionData);
+        if (requestsList.querySelector(".empty-message"))
+          requestsList.innerHTML = "";
+        requestsList.prepend(createCommentElement(savedPost));
+        if (requestsCountEl)
+          requestsCountEl.textContent =
+            parseInt(requestsCountEl.textContent, 10) + 1;
+      }
 
-        if (!loggedInUserEmail) return showNotification("You must be logged in to post.", "error");
-        if (!type) return showNotification("Please select a submission type (Comment or Request).", "error");
-        if (!text) return showNotification("Please enter a message.", "error");
+      if (!savedPost) {
+        throw new Error("API did not return the saved post.");
+      }
 
-        const users = JSON.parse(localStorage.getItem("streamVerseUsers") || "[]");
-        const currentUser = users.find((u) => u.email === loggedInUserEmail);
+      showNotification(
+        `${
+          type.charAt(0).toUpperCase() + type.slice(1)
+        } submitted successfully!`,
+        { type: "success" }
+      );
+      commentForm.reset();
 
-        if (!currentUser) return showNotification("Could not verify user. Please log in again.", "error");
-        
-        const submissionData = {
-            text: text,
-            user: { name: currentUser.username, email: currentUser.email },
-        };
+      const trigger = typeDropdownPlaceholder.querySelector(
+        ".custom-select-trigger"
+      );
+      if (trigger) {
+        trigger.textContent = "Comment";
+        trigger.dataset.value = "comment";
+      }
+      updateFormUI("comment");
+    } catch (error) {
+      console.error("Failed to submit post:", error);
+      showNotification("Failed to submit. Please try again.", {
+        type: "error",
+      });
+    }
+  };
 
-        try {
-            let savedPost;
-            if (type === "comment") {
-                savedPost = await postComment(contentId, submissionData);
-                if (commentsList.querySelector('.empty-message')) commentsList.innerHTML = '';
-                commentsList.prepend(createCommentElement(savedPost));
-                if (commentsTab) commentsTab.textContent = parseInt(commentsTab.textContent, 10) + 1;
-            } else { // type === 'request'
-                submissionData.contentId = contentId;
-                savedPost = await postRequest(submissionData);
-                if (requestsList.querySelector('.empty-message')) requestsList.innerHTML = '';
-                requestsList.prepend(createCommentElement(savedPost));
-                if (requestsTab) requestsTab.textContent = parseInt(requestsTab.textContent, 10) + 1;
-            }
+  commentForm.onsubmit = null;
+  commentForm.addEventListener("submit", handleFormSubmit);
 
-            if (!savedPost) {
-                 throw new Error("API did not return the saved post.");
-            }
+  const commentTypeOptions = [
+    { value: "comment", text: "Comment" },
+    { value: "request", text: "Request" },
+  ];
+  createCustomDropdown(
+    "comment-type-dropdown-placeholder",
+    "Comment",
+    commentTypeOptions,
+    updateFormUI
+  );
+  updateFormUI("comment");
 
-            showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} submitted successfully!`, 'success');
-            commentForm.reset();
-            
-            const trigger = typeDropdownPlaceholder.querySelector(".custom-select-trigger");
-            if(trigger) {
-                trigger.textContent = 'Comment';
-                trigger.dataset.value = 'comment';
-            }
-            updateFormUI('comment');
+  document.getElementById("commentLoginLink").addEventListener("click", (e) => {
+    e.preventDefault();
+    showAuthModal("login");
+  });
 
-        } catch (error) {
-            console.error('Failed to submit post:', error);
-            showNotification('Failed to submit. Please try again.', 'error');
-        }
-    };
-    
-    commentForm.onsubmit = null; 
-    commentForm.addEventListener('submit', handleFormSubmit);
-
-    const commentTypeOptions = [
-        { value: "comment", text: "Comment" },
-        { value: "request", text: "Request" },
-    ];
-    createCustomDropdown("comment-type-dropdown-placeholder", "Comment", commentTypeOptions, updateFormUI);
-    updateFormUI('comment');
-
-    document.getElementById("commentLoginLink").addEventListener("click", (e) => {
-        e.preventDefault();
-        if (typeof showAuthModal === "function") showAuthModal("login");
+  const commentTabs = document.querySelectorAll(".comment-tab");
+  commentTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      commentTabs.forEach((t) => t.classList.remove("active"));
+      document
+        .querySelectorAll(".comment-tab-content")
+        .forEach((c) => c.classList.remove("active"));
+      tab.classList.add("active");
+      document.getElementById(`${tab.dataset.tab}List`).classList.add("active");
     });
-
-    const commentTabs = document.querySelectorAll(".comment-tab");
-    commentTabs.forEach((tab) => {
-        tab.addEventListener("click", () => {
-            commentTabs.forEach((t) => t.classList.remove("active"));
-            document.querySelectorAll(".comment-tab-content").forEach((c) => c.classList.remove("active"));
-            tab.classList.add("active");
-            document.getElementById(`${tab.dataset.tab}List`).classList.add("active");
-        });
-    });
+  });
 }
 
 function createCommentElement(commentData) {
@@ -556,8 +612,10 @@ function createCommentElement(commentData) {
     typeof commentData.user === "object" && commentData.user.name
       ? commentData.user.name
       : commentData.user || "Anonymous";
-      
-  const postDate = commentData.date ? new Date(commentData.date).toLocaleDateString() : 'Some time ago';
+
+  const postDate = commentData.date
+    ? new Date(commentData.date).toLocaleDateString()
+    : "Some time ago";
 
   let repliesHtml = "";
   if (commentData.replies && commentData.replies.length > 0) {
@@ -598,9 +656,7 @@ async function displayRelatedContent(item) {
   if (related.length > 0) {
     relatedRow.innerHTML = "";
     related.forEach((content) => {
-      if (typeof createContentCard === "function") {
-        relatedRow.appendChild(createContentCard(content));
-      }
+      relatedRow.appendChild(createContentCard(content));
     });
   } else {
     relatedRow.innerHTML =

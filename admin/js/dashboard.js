@@ -1,29 +1,37 @@
-// admin/js/dashboard.js
+// admin/js/dashboard.js (Module Version)
 
-function initializeDashboard() {
-    console.log("Dashboard view loaded.");
-    loadDashboardStats();
+import { showNotification } from "../../js/notifications.js";
+
+// Export the main function so the router can call it
+export function initializeDashboard() {
+  console.log("Dashboard view loaded.");
+  loadDashboardStats();
 }
 
 async function loadDashboardStats() {
-    try {
-        const response = await fetch('/api/content');
-        if (!response.ok) throw new Error(`API request failed`);
-        const content = await response.json();
+  try {
+    const response = await fetch("/api/content");
+    if (!response.ok) throw new Error(`API request failed`);
+    const content = await response.json();
 
-        const total = content.length;
-        const movies = content.filter(c => c.type === 'Movie').length;
-        const series = content.filter(c => c.type === 'Web Series').length;
-        const animes = content.filter(c => c.type === 'Anime').length;
+    const total = content.length;
+    const movies = content.filter((c) => c.type === "movie").length;
+    const series = content.filter((c) => c.type === "webseries").length;
+    const animes = content.filter((c) => c.type === "animes").length;
 
-        document.getElementById('total-content-count').textContent = total;
-        document.getElementById('movie-count').textContent = movies;
-        document.getElementById('series-count').textContent = series;
-        document.getElementById('anime-count').textContent = animes;
+    const totalEl = document.getElementById("total-content-count");
+    const movieEl = document.getElementById("movie-count");
+    const seriesEl = document.getElementById("series-count");
+    const animeEl = document.getElementById("anime-count");
 
-    } catch (error) {
-        console.error("Error loading dashboard stats:", error);
-        const statElements = document.querySelectorAll('.stat-card-number');
-        statElements.forEach(el => el.textContent = 'Error');
-    }
+    if (totalEl) totalEl.textContent = total;
+    if (movieEl) movieEl.textContent = movies;
+    if (seriesEl) seriesEl.textContent = series;
+    if (animeEl) animeEl.textContent = animes;
+  } catch (error) {
+    console.error("Error loading dashboard stats:", error);
+    showNotification("Error loading dashboard stats.", { type: "error" });
+    const statElements = document.querySelectorAll(".stat-card-number");
+    statElements.forEach((el) => (el.textContent = "Error"));
+  }
 }

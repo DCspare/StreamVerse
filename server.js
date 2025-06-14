@@ -215,6 +215,140 @@ app.delete("/api/content/:id", (req, res) => {
       .json({ error: "Failed to write updated data to one or more files." });
 });
 
+// NEW: Bulk delete content
+app.delete("/api/content/bulk", (req, res) => {
+  const { ids } = req.body;
+  if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    return res
+      .status(400)
+      .json({ error: "An array of content IDs is required." });
+  }
+
+  const contentPath = path.join(__dirname, "data", "content.json");
+  const mediaPath = path.join(__dirname, "data", "media.json");
+  const episodesPath = path.join(__dirname, "data", "episodes.json");
+  const commentsPath = path.join(__dirname, "data", "comments.json");
+
+  const content = readJsonFile(contentPath);
+  const media = readJsonFile(mediaPath);
+  const episodes = readJsonFile(episodesPath);
+  const comments = readJsonFile(commentsPath);
+
+  if (!content || !media || !episodes || !comments) {
+    return res
+      .status(500)
+      .json({ error: "Could not read one or more data files." });
+  }
+
+  const initialLength = content.length;
+  const filteredContent = content.filter((c) => !ids.includes(c.id));
+
+  if (filteredContent.length === initialLength) {
+    return res
+      .status(404)
+      .json({ error: "None of the provided IDs were found." });
+  }
+
+  // Remove associated data
+  ids.forEach((id) => {
+    delete media[id];
+    delete episodes[id];
+    delete comments[id];
+  });
+
+  const success =
+    writeJsonFile(contentPath, filteredContent) &&
+    writeJsonFile(mediaPath, media) &&
+    writeJsonFile(episodesPath, episodes) &&
+    writeJsonFile(commentsPath, comments);
+
+  if (success) {
+    res
+      .status(200)
+      .json({
+        message: `${
+          initialLength - filteredContent.length
+        } items deleted successfully.`,
+      });
+  } else {
+    res
+      .status(500)
+      .json({ error: "Failed to write updated data to one or more files." });
+  }
+});
+
+// NEW: Bulk add content
+app.post("/api/content/bulk", (req, res) => {
+  const newContentArray = req.body;
+  if (!Array.isArray(newContentArray)) {
+    return res
+      .status(400)
+      .json({ error: "Request body must be an array of content objects." });
+  }
+
+  const contentPath = path.join(__dirname, "data", "content.json");
+  const content = readJsonFile(contentPath) || [];
+  const mediaPath = path.join(__dirname, "data", "media.json");
+  const episodesPath = path.join(__dirname, "data", "episodes.json");
+  const commentsPath = path.join(__dirname, "data", "comments.json");
+  const media = readJsonFile(mediaPath) || {};
+  const episodes = readJsonFile(episodesPath) || {};
+  const comments = readJsonFile(commentsPath) || {};
+
+  let addedCount = 0;
+  const addedItems = [];
+
+  for (const data of newContentArray) {
+    if (!data.title || !data.type || !data.year) {
+      continue; // Skip invalid items
+    }
+
+    const newId = generateUniqueSlug(data.title, content.concat(addedItems));
+    const newContent = {
+      id: newId,
+      title: data.title,
+      type: data.type,
+      year: data.year,
+      posterImage: data.posterImage || null,
+      genres: data.genres || [],
+      rating: parseFloat(data.rating) || 0,
+      duration: data.duration || null,
+      storyline: data.storyline || "",
+      ...data, // Include any other valid fields provided
+    };
+
+    addedItems.push(newContent);
+
+    media[newContent.id] = { trailers: {}, screenshots: [], downloadLinks: {} };
+    if (["webseries", "animes"].includes(newContent.type)) {
+      episodes[newContent.id] = { seasons: {}, zipFiles: [] };
+    }
+    comments[newContent.id] = [];
+
+    addedCount++;
+  }
+
+  // Add all new items to the beginning of the content array
+  content.unshift(...addedItems);
+
+  const success =
+    writeJsonFile(contentPath, content) &&
+    writeJsonFile(mediaPath, media) &&
+    writeJsonFile(episodesPath, episodes) &&
+    writeJsonFile(commentsPath, comments);
+
+  if (success) {
+    res
+      .status(201)
+      .json({
+        message: `${addedCount} of ${newContentArray.length} items added successfully.`,
+        items: addedItems,
+      });
+  } else {
+    res.status(500).json({ error: "Failed to save new content." });
+  }
+});
+
 app.post("/api/media/:id/:type", (req, res) => {
   const { id, type } = req.params;
   const mediaPath = path.join(__dirname, "data", "media.json");
@@ -467,39 +601,41 @@ app.delete("/api/episodes/:id/seasons/:seasonNumber/episodes", (req, res) => {
 
 // [FIX #2A] GET all comments AND requests for a specific content ID
 app.get("/api/comments/:contentId", (req, res) => {
-    const { contentId } = req.params;
-    const commentsPath = path.join(__dirname, "data", "comments.json");
-    const requestsPath = path.join(__dirname, "data", "requests.json");
+  const { contentId } = req.params;
+  const commentsPath = path.join(__dirname, "data", "comments.json");
+  const requestsPath = path.join(__dirname, "data", "requests.json");
 
-    const allCommentsData = readJsonFile(commentsPath) || {};
-    const allRequestsData = readJsonFile(requestsPath) || [];
+  const allCommentsData = readJsonFile(commentsPath) || {};
+  const allRequestsData = readJsonFile(requestsPath) || [];
 
-    // Get comments for the specific content ID and ensure they have a 'type'
-    const contentComments = (allCommentsData[contentId] || []).map(c => ({
-        ...c,
-        type: 'comment',
-        sortDate: c.date || '1970-01-01T00:00:00.000Z' // Use 'date' for sorting
+  // Get comments for the specific content ID and ensure they have a 'type'
+  const contentComments = (allCommentsData[contentId] || []).map((c) => ({
+    ...c,
+    type: "comment",
+    sortDate: c.date || "1970-01-01T00:00:00.000Z", // Use 'date' for sorting
+  }));
+
+  // Filter requests for the specific content ID and ensure they have a 'type'
+  const contentRequests = allRequestsData
+    .filter((r) => r.contentId === contentId)
+    .map((r) => ({
+      ...r,
+      type: "request",
+      sortDate: r.date || "1970-01-01T00:00:00.000Z", // Use 'date' for sorting
     }));
 
-    // Filter requests for the specific content ID and ensure they have a 'type'
-    const contentRequests = allRequestsData
-        .filter(r => r.contentId === contentId)
-        .map(r => ({ 
-            ...r, 
-            type: 'request',
-            sortDate: r.date || '1970-01-01T00:00:00.000Z' // Use 'date' for sorting
-        }));
-    
-    // Combine both arrays
-    const combinedSubmissions = [...contentComments, ...contentRequests];
+  // Combine both arrays
+  const combinedSubmissions = [...contentComments, ...contentRequests];
 
-    // Sort the combined array by date, most recent first
-    combinedSubmissions.sort((a, b) => new Date(b.sortDate) - new Date(a.sortDate));
+  // Sort the combined array by date, most recent first
+  combinedSubmissions.sort(
+    (a, b) => new Date(b.sortDate) - new Date(a.sortDate)
+  );
 
-    // Remove the temporary sortDate property before sending to client
-    combinedSubmissions.forEach(sub => delete sub.sortDate);
+  // Remove the temporary sortDate property before sending to client
+  combinedSubmissions.forEach((sub) => delete sub.sortDate);
 
-    res.json(combinedSubmissions);
+  res.json(combinedSubmissions);
 });
 
 app.post("/api/comments/:contentId", (req, res) => {

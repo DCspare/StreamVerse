@@ -1,0 +1,234 @@
+/* --- Responsive Styles for StreamVerse Admin Panel --- */
+
+/* Sidebar menu toggle button */
+.sidebar-toggle {
+  display: none; /* Hidden by default, shown on mobile */
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-right: 0.75rem; /* Add some space between toggle and logo */
+}
+
+/* NEW: Styles for the sidebar overlay */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 19; /* Below sidebar (z-index: 20), above everything else */
+  display: none;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+.sidebar-overlay.visible {
+  display: block;
+  opacity: 1;
+}
+
+/* For large desktops to prevent content from stretching too wide */
+@media (min-width: 1200px) {
+  .admin-main-content {
+    padding: 2rem 3rem; /* Increase horizontal padding */
+  }
+}
+
+/* MODIFIED: For smaller desktops and large tablets, starting below 1157px */
+@media (max-width: 1157px) {
+  .admin-container {
+    grid-template-columns: 200px 1fr;
+  }
+  .admin-main-content {
+    padding: 1.5rem;
+  }
+  .page-header h1 {
+    font-size: 1.75rem;
+  }
+  .admin-logo {
+    font-size: 1.3rem;
+  }
+}
+
+/* For standard tablets and mobile phones */
+@media (max-width: 768px) {
+  .admin-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: 60px 1fr; /* Ensure header has a fixed height */
+    grid-template-areas:
+      "header"
+      "main";
+  }
+
+  .admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    z-index: 20;
+    width: 240px; /* Give sidebar a fixed width */
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    /* FIXED: Using a solid, hardcoded color to guarantee opacity */
+    background-color: #111827;
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-toggle {
+    display: block;
+  }
+
+  .admin-logo span {
+    display: none;
+  }
+
+  /* --- Responsive Data Table --- */
+  .data-table thead {
+    display: none;
+  }
+
+  .data-table tr {
+    display: block;
+    border: 1px solid var(--border-color-medium);
+    border-radius: var(--modal-radius);
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+  }
+
+  .data-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0.5rem;
+    text-align: right;
+    border-bottom: 1px solid var(--border-color-light);
+  }
+
+  .data-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-muted-color);
+    text-align: left;
+    padding-right: 1rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+  }
+
+  .data-table td:last-child,
+  .data-table tr:last-child td:last-child {
+    border-bottom: none;
+  }
+
+  .data-table .checkbox-cell,
+  .data-table .table-poster-cell,
+  .data-table .id-cell {
+    width: auto;
+    word-break: break-all;
+  }
+
+  .table-poster {
+    width: 45px;
+    height: 65px;
+  }
+}
+
+/* For large phones and small tablets */
+@media (max-width: 600px) {
+  .content-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  .admin-search-input {
+    min-width: 100%;
+  }
+  .main-actions,
+  .history-actions,
+  .bulk-actions-container {
+    justify-content: center;
+    width: 100%;
+  }
+  .action-buttons {
+    gap: 0.25rem; /* Reduce gap between action buttons in tables */
+  }
+  .action-buttons .btn {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* For small mobile phones */
+@media (max-width: 480px) {
+  .admin-header {
+    padding: 0 1rem;
+  }
+  .admin-main-content {
+    padding: 1rem;
+  }
+  .page-header {
+    margin-bottom: 1.5rem;
+  }
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  .stat-card-icon {
+    font-size: 2rem;
+  }
+  .stat-card-number {
+    font-size: 1.5rem;
+  }
+
+  .admin-modal {
+    padding: 0; /* Let the flex children handle padding */
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+    border: none;
+  }
+
+  .admin-modal h2 {
+    padding: 1.5rem 1rem;
+  }
+
+  .admin-modal form {
+    padding: 1rem 0;
+  }
+  .admin-modal form > .form-group,
+  .admin-modal form > .form-group-grid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .form-actions {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .form-actions .btn {
+    width: 100%;
+  }
+
+  .form-group-grid-small {
+    grid-template-columns: 1fr;
+  }
+  .form-group-grid-small .full-width {
+    grid-column: 1 / -1;
+  }
+  .form-group-grid-small .btn {
+    width: 100%;
+  }
+}

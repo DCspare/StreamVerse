@@ -1,6 +1,8 @@
-// admin/js/request-manager.js
+// admin/js/request-manager.js (Module Version)
 
-function initializeRequestManager() {
+import { showNotification } from "../../js/notifications.js";
+
+export function initializeRequestManager() {
   console.log("Request Manager loaded.");
   loadAllRequests();
   setupRequestListeners();
@@ -14,33 +16,19 @@ async function loadAllRequests() {
     renderRequests(requests);
   } catch (error) {
     console.error("Error loading requests:", error);
-    showNotification("Could not load requests.", "error");
-    // Also try to render an error message in the table
+    showNotification("Could not load requests.", { type: "error" });
     const tableBody = document.getElementById("requests-table-body");
     if (tableBody) {
-      tableBody.innerHTML = `<tr><td colspan="6" class="error-message">Could not load requests. See console for details.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="6" class="error-message">Could not load requests.</td></tr>`;
     }
   }
 }
 
 function renderRequests(requests) {
   const tableBody = document.getElementById("requests-table-body");
+  if (!tableBody) return;
 
-  // [FIX] Add a null check for the table body to prevent the crash
-  if (!tableBody) {
-    console.error(
-      "Fatal Error: The element with ID 'requests-table-body' was not found in the HTML view."
-    );
-    return;
-  }
-
-  if (!Array.isArray(requests)) {
-    console.error("Data received for requests is not an array:", requests);
-    tableBody.innerHTML = `<tr><td colspan="6" class="error-message">Error: Invalid data format received from server.</td></tr>`;
-    return;
-  }
-
-  if (requests.length === 0) {
+  if (!Array.isArray(requests) || requests.length === 0) {
     tableBody.innerHTML = `<tr><td colspan="6" class="empty-message">No pending requests found.</td></tr>`;
     return;
   }
@@ -49,12 +37,12 @@ function renderRequests(requests) {
     .map(
       (req) => `
     <tr data-id="${req.id}">
-      <td>${req.id}</td>
-      <td>${req.contentId || "N/A"}</td>
-      <td>${(req.user && req.user.name) || "Anonymous"}</td>
-      <td class="text-cell">${req.text}</td>
-      <td>${new Date(req.date).toLocaleString()}</td>
-      <td>
+      <td data-label="ID">${req.id}</td>
+      <td data-label="Content ID">${req.contentId || "N/A"}</td>
+      <td data-label="User">${(req.user && req.user.name) || "Anonymous"}</td>
+      <td class="text-cell" data-label="Request">${req.text}</td>
+      <td data-label="Date">${new Date(req.date).toLocaleString()}</td>
+      <td data-label="Actions">
         <div class="action-buttons">
           <button class="btn btn-primary btn-small reply-btn" data-id="${
             req.id
@@ -74,12 +62,7 @@ function setupRequestListeners() {
   const modalOverlay = document.getElementById("request-reply-modal-overlay");
   const replyForm = document.getElementById("request-reply-form");
 
-  if (!table || !modalOverlay || !replyForm) {
-    console.error(
-      "One or more listener targets (table, modal, form) are missing from the DOM."
-    );
-    return;
-  }
+  if (!table || !modalOverlay || !replyForm) return;
 
   table.addEventListener("click", (e) => {
     const replyButton = e.target.closest(".reply-btn");
@@ -97,10 +80,10 @@ function setupRequestListeners() {
 
   document
     .getElementById("request-reply-modal-close-btn")
-    .addEventListener("click", closeReplyModal);
+    ?.addEventListener("click", closeReplyModal);
   document
     .getElementById("request-reply-modal-cancel-btn")
-    .addEventListener("click", closeReplyModal);
+    ?.addEventListener("click", closeReplyModal);
   modalOverlay.addEventListener("click", (e) => {
     if (e.target === modalOverlay) closeReplyModal();
   });
@@ -120,11 +103,11 @@ function setupRequestListeners() {
       if (!response.ok)
         throw new Error(result.error || "Failed to post reply.");
 
-      showNotification("Reply posted successfully!", "success");
+      showNotification("Reply posted successfully!", { type: "success" });
       closeReplyModal();
       loadAllRequests();
     } catch (error) {
-      showNotification(`Error: ${error.message}`, "error");
+      showNotification(`Error: ${error.message}`, { type: "error" });
     }
   });
 }
@@ -142,7 +125,7 @@ function openReplyModal(requestId, requestText) {
 function closeReplyModal() {
   document
     .getElementById("request-reply-modal-overlay")
-    .classList.remove("visible");
+    ?.classList.remove("visible");
 }
 
 function handleDeleteRequest(requestId) {
@@ -162,17 +145,16 @@ function handleDeleteRequest(requestId) {
             if (!response.ok)
               throw new Error(result.error || "Failed to delete request.");
 
-            showNotification("Request deleted successfully!", "success");
+            showNotification("Request deleted successfully!", {
+              type: "success",
+            });
             loadAllRequests();
           } catch (error) {
-            showNotification(`Error: ${error.message}`, "error");
+            showNotification(`Error: ${error.message}`, { type: "error" });
           }
         },
       },
-      {
-        text: "Cancel",
-        action: () => {},
-      },
+      { text: "Cancel", action: () => {} },
     ],
   });
 }

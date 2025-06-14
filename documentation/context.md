@@ -6,53 +6,53 @@
 ## File Structure
 
 StreamVerse/
-├── index.html
-├── movies.html
-├── animes.html
-├── webseries.html
-├── contentDetails.html
-├── watchlist.html
-├── category.html
-├── az-page.html
+├── index.html                  # UPDATED: Uses ES Modules
+├── movies.html                 # UPDATED: Uses ES Modules
+├── animes.html                 # UPDATED: Uses ES Modules
+├── webseries.html              # UPDATED: Uses ES Modules
+├── contentDetails.html         # UPDATED: Uses ES Modules
+├── watchlist.html              # UPDATED: Uses ES Modules
+├── category.html               # UPDATED: Uses ES Modules
+├── az-page.html                # UPDATED: Uses ES Modules
 │
-├── admin/                     # NEW: Admin Panel
-│   ├── index.html             # NEW: The SPA shell for the admin panel
+├── admin/
+│   ├── index.html              # UPDATED: Loads main script as a module
 │   ├── css/
-│   │   └── admin.css          # NEW: Styles for the admin panel
+│   │   └── admin.css           # UPDATED: Includes styles for bulk actions
 │   ├── js/
-│   │   ├── admin.js           # NEW: The client-side router and main SPA script
-│   │   ├── content-manager.js # NEW: Logic for the content management page
-│   │   ├── media-manager.js   # NEW: Logic for the media management page
-│   │   ├── dashboard.js       # NEW: Logic for the admin dashboard
-│   │   ├── comments-manager.js       # NEW: Logic for the comments management page
-│   │   └── request-manager.js       # NEW: Logic for the requests management page
-│   └── views/                 # NEW: HTML partials loaded by the router
-│       ├── content.html       # NEW: View for managing content
-│       ├── dashboard.html     # NEW: View for the main dashboard
-│       ├── media.html         # NEW: View for managing media
-│       ├── comments.html         # NEW: for comments section of admin panel
-│       └── requests.html         # NEW: for requests section of admin panel
+│   │   ├── admin.js            # UPDATED: Module-based router using dynamic import()
+│   │   ├── content-manager.js  # UPDATED: ES Module with bulk action logic
+│   │   ├── media-manager.js    # UPDATED: ES Module
+│   │   ├── dashboard.js        # UPDATED: ES Module
+│   │   ├── comments-manager.js # UPDATED: ES Module
+│   │   └── request-manager.js  # UPDATED: ES Module
+│   └── views/
+│       ├── content.html        # UPDATED: Includes UI for bulk actions
+│       ├── dashboard.html
+│       ├── media.html
+│       ├── comments.html
+│       └── requests.html
 │
-├── server.js                  # UPDATED: Unified Node.js server (serves frontend + API)
-├── package.json               # UPDATED: Node.js project configuration
+├── server.js                   # UPDATED: Includes bulk action API endpoints
+├── package.json
 │
 ├── css/
 │   ├── style.css
 │   └── responsive.css
 │
 ├── js/
-│   ├── main.js
-│   ├── movieApi.js
-│   ├── templates.js
-│   ├── auth.js
-│   ├── watchlist.js
-│   ├── notifications.js       # UPDATED: Now used by the admin panel
-│   ├── contentDetails.js
-│   ├── movies.js
-│   ├── animes.js
-│   ├── webseries.js
-│   ├── category.js
-│   ├── azContent.js
+│   ├── main.js                 # UPDATED: ES Module
+│   ├── movieApi.js             # UPDATED: ES Module, exports all API functions
+│   ├── templates.js            # UPDATED: ES Module
+│   ├── auth.js                 # UPDATED: ES Module
+│   ├── watchlist.js            # UPDATED: ES Module
+│   ├── notifications.js        # UPDATED: ES Module
+│   ├── contentDetails.js       # UPDATED: ES Module
+│   ├── movies.js               # UPDATED: ES Module
+│   ├── animes.js               # UPDATED: ES Module
+│   ├── webseries.js            # UPDATED: ES Module
+│   ├── category.js             # UPDATED: ES Module
+│   ├── azContent.js            # UPDATED: ES Module
 │   └── trailers.js
 │
 ├── data/
@@ -68,68 +68,43 @@ StreamVerse/
 
 ## Project Purpose & Architecture
 
-StreamVerse is a feature-rich, responsive web application for browsing and downloading content. It operates on a **unified client-server architecture**.
+StreamVerse is a feature-rich, responsive web application for browsing and downloading content. It operates on a **unified client-server architecture** and now uses **ES Modules** for all its client-side JavaScript.
 
-*   **Frontend (Client):** The user-facing website (HTML, CSS, JS) and the **Admin Panel**. The Admin Panel is a **Single-Page Application (SPA)** that runs in the browser, providing a fast, app-like experience for managing the platform.
-*   **Backend (Server):** A **Node.js/Express** server (`server.js`) that acts as the application's brain. It has two primary jobs:
-    1.  **Serves all frontend files** (HTML, CSS, JS) to the user's browser, including the main site and the admin panel SPA.
-    2.  **Provides a JSON API** for all data operations (reading from and writing to the `.json` files).
+*   **Frontend (Client):** The user-facing website and the Admin Panel. Both are now modular applications.
+    *   **Loading:** HTML files (e.g., `index.html`, `admin/index.html`) load a primary JavaScript file using `<script type="module">`.
+    *   **Dependencies:** Each JavaScript module uses `import` to load functions from other modules (e.g., `main.js` imports functions from `movieApi.js`). Functions intended for sharing are declared with `export`.
+*   **Backend (Server):** A **Node.js/Express** server (`server.js`) that:
+    1.  Serves all frontend files.
+    2.  Provides a JSON API for all data operations, including new bulk action endpoints.
 
-This unified approach simplifies deployment and eliminates CORS issues by ensuring the frontend and API are always served from the same origin.
+This unified, modular approach simplifies dependency management, prevents global scope pollution, and improves code organization.
 
 ## Admin Panel
 
-The Admin Panel is a secure, SPA-based interface for managing all aspects of the website content.
-*   **Routing:** A client-side router (`admin.js`) handles navigation without page reloads.
-*   **Views:** Page content is loaded dynamically from HTML partials located in the `/admin/views/` directory.
+The Admin Panel is a secure, SPA-based interface for managing website content.
+*   **Routing:** The client-side router (`admin.js`) is the main entry point module. It dynamically `import()`s the necessary JavaScript module for each view (e.g., `content-manager.js` for the content page) and executes its initialization function.
+*   **Views:** Page content is loaded dynamically from HTML partials.
 *   **Functionality:**
     *   **Dashboard:** Shows at-a-glance statistics.
-    *   **Content Management:** Full CRUD (Create, Read, Update, Delete) for all content metadata via a modal form.
-    *   **Media Management:** A dedicated page to add/delete trailers, screenshots, and download links for each piece of content.
-    *   **Comments Management:** A dedicated page to add/delete and reply comments.
-    *   **Requests Management:** A dedicated page to add/delete and reply requests.
+    *   **Content Management:** Full CRUD, now with **Bulk Add** (via JSON) and **Bulk Delete** functionality.
+    *   **Media & Episode Management:** Dedicated pages for managing media.
+    *   **Comments & Requests Management:** Dedicated pages for moderation.
 
+## Data Flow & Script Interaction
 
-## Technology Stack
-
-*   **Frontend:** HTML5, CSS3, JavaScript (ES6+)
-*   **Backend:** **Node.js** with the **Express.js** framework.
-*   **Styling:** Custom CSS (`style.css`, `responsive.css`).
-*   **Icons & Fonts:** Remixicon and Google Fonts.
-*   **Data Storage:**
-    *   **Centralized JSON Files:** Managed by `server.js`.
-        *   `content.json`: Core metadata for all content.
-        *   `media.json`: Stores trailers, screenshots, and movie download links.
-        *   `episodes.json`: Stores season and episode data for series/animes.
-        *   `comments.json`: Stores all user comments and admin replies.
-    *   **Browser `localStorage`:** Used only for client-side data.
-        *   User session (`loggedInUser`, `userCredentials`).
-        *   User-specific watchlists (`userWatchlists`).
-
-## Data Flow
-
-1.  A user opens the website (e.g., `index.html`) in their browser.
-2.  The frontend JavaScript (e.g., `main.js`) needs data. It uses functions from `js/movieApi.js`.
-3.  `movieApi.js` makes an API call (e.g., `fetch('http://localhost:3000/api/content')`) to the local Node.js backend server.
-4.  The backend server (`server.js`) receives the request, reads the appropriate `.json` file from the `/data/` folder (e.g., `data/content.json`), and sends the data back to the frontend as a JSON response.
-5.  The frontend JavaScript receives the data and uses it to build the HTML and display the content to the user.
-6.  When a user posts a comment, the process is reversed: `contentDetails.js` sends the comment data to the backend, which then writes it to `data/comments.json`.
+1.  A user opens an HTML page (e.g., `index.html`).
+2.  The browser loads its main script as a module (e.g., `<script type="module" src="js/main.js">`).
+3.  The main script (`main.js`) `import`s the `getAllContent` function from `js/movieApi.js`.
+4.  `movieApi.js` makes an API call (`fetch('/api/content')`) to the backend `server.js`.
+5.  `server.js` reads the corresponding JSON file and returns the data.
+6.  `main.js` receives the data and uses it to build the page content.
+7.  All shared functions (e.g., `showNotification`, `createContentCard`) are explicitly `export`ed from their respective files and `import`ed where needed. This eliminates "not defined" errors and removes the need for multiple `<script>` tags in the HTML files.
 
 ## Specific File Workings
 
-*   **`server.js`**: The backend API server. It reads from and writes to the JSON data files and exposes API endpoints (e.g., `/api/content`, `/api/comments/:id`) for the frontend to use.
-*   **`js/movieApi.js`**: **API Client**. All functions now `fetch` data from the `server.js` API endpoints. It is the central point for all frontend-to-backend communication.
-*   **`js/main.js`**: Cleaned and updated to fetch data via `movieApi.js` at startup and then distribute that data to the various functions that populate the homepage.
-*   **`js/contentDetails.js`**: Fetches all its data (content details, media, episodes, comments) from the API. It contains the logic to dynamically build the download section differently for movies vs. series. The comment form now posts data to the backend API.
-*   **`contentDetails.html`**: Updated with new placeholder `div`s (`#movieDownloadSection`, `#seriesDownloadSection`) for the dynamic download logic.
-*   **All other files** function as described in the original context, but now rely on the API-driven data provided by the updated core scripts.
-*   **/templates/footer.html**: HTML template for the website footer.
-*   **/templates/header.html**: HTML template for the website header.
-*   **/assets/images/image.png**: Example image asset.
-*   **/assets/images/hero/echoes_of_tomorrow_bg.jpg**: Background image for a hero section item.
-*   **/assets/images/hero/interstellar_odyssey_bg.jpg**: Background image for a hero section item.
-*   **/assets/images/hero/lost_artifact_bg.jpg**: Background image for a hero section item.
-*   **/assets/images/hero/mystic_chronicles_bg.jpg**: Background image for a hero section item.
-*   **/assets/images/hero/spirit_blade_bg.jpg**: Background image for a hero section item.
+*   **`server.js`**: Backend API server. Now includes `/api/content/bulk` endpoints for deleting and adding multiple content items at once.
+*   **`js/movieApi.js`**: **API Client Module**. Exports all functions for frontend-to-backend communication.
+*   **All page-specific JS (`main.js`, `movies.js`, `contentDetails.js`, etc.)**: Now operate as ES Modules. They `import` their dependencies and are loaded into their respective HTML pages via `<script type="module">`.
+*   **All HTML files (`index.html`, `movies.html`, etc.)**: Now only include `<script type="module">` tags for their primary JS file(s), significantly cleaning up the bottom of the files.
 
  ---

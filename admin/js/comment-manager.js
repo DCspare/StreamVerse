@@ -1,17 +1,13 @@
-// admin/js/comment-manager.js
+// admin/js/comment-manager.js (Module Version)
 
-/**
- * Initializes the comment management page by loading comments and setting up event listeners.
- */
-function initializeCommentManager() {
+import { showNotification } from "../../js/notifications.js";
+
+export function initializeCommentManager() {
   console.log("Comment Manager loaded.");
   loadAllComments();
   setupCommentListeners();
 }
 
-/**
- * Fetches all comments from the server and renders them in the table.
- */
 async function loadAllComments() {
   try {
     const response = await fetch("/api/comments_all");
@@ -27,13 +23,9 @@ async function loadAllComments() {
   }
 }
 
-/**
- * Renders an array of comment objects into the comments table.
- * @param {Array} comments - The array of comments to render.
- */
 function renderComments(comments) {
   const tableBody = document.getElementById("comments-table-body");
-  if (!tableBody) return; // Exit if the table isn't on the page
+  if (!tableBody) return;
 
   if (!comments || comments.length === 0) {
     tableBody.innerHTML = `<tr><td colspan="5" class="empty-message">No comments found.</td></tr>`;
@@ -46,32 +38,27 @@ function renderComments(comments) {
       <tr data-comment-id="${comment.commentId}" data-content-id="${
         comment.contentId
       }">
-        <td>${comment.contentTitle || "Unknown"}</td>
-        <td>${
+        <td data-label="Content">${comment.contentTitle || "Unknown"}</td>
+        <td data-label="User">${
           (comment.user && comment.user.name) || comment.user || "Anonymous"
         }</td>
-        <td class="text-cell">${comment.text}</td>
-        <td>${new Date(comment.date).toLocaleString()}</td>
-        <td>
+        <td class="text-cell" data-label="Comment">${comment.text}</td>
+        <td data-label="Date">${new Date(comment.date).toLocaleString()}</td>
+        <td data-label="Actions">
           <div class="action-buttons">
             <button class="btn btn-primary btn-small reply-btn">Reply</button>
             <button class="btn btn-danger btn-small delete-btn">Delete</button>
           </div>
         </td>
-      </tr>
-    `
+      </tr>`
     )
     .join("");
 }
 
-/**
- * Sets up all necessary event listeners for the comment management page.
- */
 function setupCommentListeners() {
   const table = document.getElementById("comments-table");
   if (!table) return;
 
-  // Use event delegation for reply and delete buttons
   table.addEventListener("click", (e) => {
     const row = e.target.closest("tr");
     if (!row) return;
@@ -88,7 +75,6 @@ function setupCommentListeners() {
     }
   });
 
-  // Listeners for the reply modal
   document
     .getElementById("comment-reply-modal-close-btn")
     ?.addEventListener("click", closeCommentReplyModal);
@@ -100,9 +86,6 @@ function setupCommentListeners() {
     ?.addEventListener("submit", handleReplySubmit);
 }
 
-/**
- * Opens the reply modal and populates it with the correct comment data.
- */
 function openCommentReplyModal(commentId, contentId, text) {
   document.getElementById("reply-comment-id").value = commentId;
   document.getElementById("reply-content-id").value = contentId;
@@ -112,18 +95,12 @@ function openCommentReplyModal(commentId, contentId, text) {
     .classList.add("visible");
 }
 
-/**
- * Closes the reply modal.
- */
 function closeCommentReplyModal() {
   document
     .getElementById("comment-reply-modal-overlay")
-    .classList.remove("visible");
+    ?.classList.remove("visible");
 }
 
-/**
- * Handles the submission of the reply form.
- */
 async function handleReplySubmit(e) {
   e.preventDefault();
   const contentId = document.getElementById("reply-content-id").value;
@@ -140,17 +117,14 @@ async function handleReplySubmit(e) {
     if (!response.ok)
       throw new Error(result.error || "Failed to submit reply.");
 
-    showNotification("Reply posted successfully!", "success");
+    showNotification("Reply posted successfully!", { type: "success" });
     closeCommentReplyModal();
-    loadAllComments(); // Refresh the list
+    loadAllComments();
   } catch (error) {
-    showNotification(`Error: ${error.message}`, "error");
+    showNotification(`Error: ${error.message}`, { type: "error" });
   }
 }
 
-/**
- * Shows a confirmation dialog and handles the deletion of a comment.
- */
 function handleDeleteComment(commentId, contentId) {
   showNotification("Are you sure you want to delete this comment?", {
     type: "confirm",
@@ -158,30 +132,26 @@ function handleDeleteComment(commentId, contentId) {
     buttons: [
       {
         text: "Delete",
-        class: "confirm-btn", // This button will trigger the action
+        class: "confirm-btn",
         action: async () => {
           try {
             const response = await fetch(
               `/api/comments/${contentId}/${commentId}`,
-              {
-                method: "DELETE",
-              }
+              { method: "DELETE" }
             );
             const result = await response.json();
             if (!response.ok)
               throw new Error(result.error || "Failed to delete comment.");
-
-            showNotification("Comment deleted successfully!", "success");
-            loadAllComments(); // Refresh the list to show the comment is gone
+            showNotification("Comment deleted successfully!", {
+              type: "success",
+            });
+            loadAllComments();
           } catch (error) {
-            showNotification(`Error: ${error.message}`, "error");
+            showNotification(`Error: ${error.message}`, { type: "error" });
           }
         },
       },
-      {
-        text: "Cancel", // This button simply closes the notification
-        action: () => {},
-      },
+      { text: "Cancel", action: () => {} },
     ],
   });
 }

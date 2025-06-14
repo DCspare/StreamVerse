@@ -169,18 +169,13 @@
         <div id="mediaContainer"></div>
       </section>
 
-      <!-- [MODIFIED] Dynamic Download Section -->
+      <!-- Dynamic Download Section -->
       <section class="content-section download-section">
         <h2 class="section-title">Download Options</h2>
         <div id="movieDownloadSection" class="hidden"></div>
-        <!-- New structure for Series/Anime downloads -->
         <div id="seriesDownloadSection" class="hidden">
-          <div id="series-download-controls">
-            <!-- Custom dropdowns and episode list will be generated here by JS -->
-          </div>
-          <div id="series-zip-container">
-            <!-- ZIP file links will be added here by JS -->
-          </div>
+          <div id="series-download-controls"></div>
+          <div id="series-zip-container"></div>
         </div>
       </section>
 
@@ -194,7 +189,7 @@
         <div class="content-row" id="relatedContentRow"></div>
       </section>
 
-      <!-- [MODIFIED] Comment Section -->
+      <!-- Comment Section -->
       <section class="content-section comment-section">
         <h2 class="section-title">Comments & Requests</h2>
         <div class="comment-form-container glass">
@@ -215,7 +210,6 @@
             <input type="hidden" id="comment-username" />
             <div class="form-group">
               <label class="form-label" for="comment-type">Type</label>
-              <!-- Placeholder for the custom dropdown -->
               <div id="comment-type-dropdown-placeholder"></div>
             </div>
             <div class="form-group">
@@ -256,13 +250,7 @@
     </div>
     <div id="footer-placeholder"></div>
 
-    <!-- JS Files -->
-    <script src="js/movieApi.js"></script>
-    <script src="js/templates.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/notifications.js"></script>
-    <script src="js/watchlist.js"></script>
-    <script src="js/contentDetails.js"></script>
+    <!-- FIXED: Replaced all old script tags with a single module script -->
+    <script type="module" src="js/contentDetails.js"></script>
   </body>
 </html>

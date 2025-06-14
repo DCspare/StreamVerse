@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>StreamVerse - Webseries</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-        <link rel="stylesheet" href="css/style.css">
-        <link rel="stylesheet" href="css/responsive.css">
-    </head>
-    <body>
-        <!-- Pre-loader -->
-        <div id="preloader">
-            <div class="spinner"></div>
-        </div>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamVerse - Webseries</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Pre-loader -->
+    <div id="preloader">
+        <div class="spinner"></div>
+    </div>
 
-        <!-- Notification Container: Used by notifications.js to display toast messages -->
-        <div id="notificationContainer"></div>
-        <div id="header-placeholder"></div>
+    <!-- Notification Container: Used by notifications.js to display toast messages -->
+    <div id="notificationContainer"></div>
+    <div id="header-placeholder"></div>
 
-        <!-- Auth Modal -->
+    <!-- Auth Modal -->
     <div id="authModal" class="modal-overlay hidden">
         <div class="modal-content glass">
             <button id="closeAuth" class="modal-close-btn">
@@ -86,8 +86,7 @@
                     </div>
                     <div class="form-group">
                         <label class="custom-checkbox terms-checkbox">
-                            I agree to the <a href="#" class="form-link">Terms of Service</a> <!-- and <a href="#"
-                                class="form-link">Privacy Policy</a> -->
+                            I agree to the <a href="#" class="form-link">Terms of Service</a>
                             <input type="checkbox">
                             <span class="checkmark"></span>
                         </label>
@@ -106,24 +105,18 @@
         </div>
     </div>
 
-        <main class="container page-content">
-            <section class="content-section">
-                <h2 class="section-title">All Webseriess</h2>
-                <div class="content-grid" id="webseriesCategoryGrid">
-                    <!-- Webseries cards will be populated by JS -->
-                </div>
-            </section>
-        </main>
+    <main class="container page-content">
+        <section class="content-section">
+            <h2 class="section-title">All Webseries</h2>
+            <div class="content-grid" id="webseriesCategoryGrid">
+                <!-- Webseries cards will be populated by JS -->
+            </div>
+        </section>
+    </main>
 
-        <div id="footer-placeholder"></div>
+    <div id="footer-placeholder"></div>
 
-        <script src="js/movieApi.js"></script>
-        <script src="js/templates.js"></script>
-        <script src="js/main.js"></script> <!-- Include main.js for createContentCard -->
-        <script src="js/auth.js"></script>
-        <script src="js/watchlist.js"></script>
-        <script src="js/notifications.js"></script>
-        <!-- Add a script for this specific page -->
-        <script src="js/webseries.js"></script>
-    </body>
-    </html>
+    <!-- FIXED: Replaced all old script tags with a single module script -->
+    <script type="module" src="js/webseries.js"></script>
+</body>
+</html>

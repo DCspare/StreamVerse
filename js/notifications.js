@@ -6,7 +6,7 @@
  * @param {number} [options.duration=4000] - How long to show (ms). 0 for permanent.
  * @param {Array<object>} [options.buttons] - Array of button objects, e.g., [{text: 'OK', class: 'confirm-btn', action: () => {}}]
  */
-window.showNotification = function (message, options = {}) {
+export function showNotification(message, options = {}) {
   const { type = "info", duration = 4000, buttons = [] } = options;
 
   let container = document.getElementById("notificationContainer");

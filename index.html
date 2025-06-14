@@ -196,13 +196,12 @@
     <!-- Footer Placeholder: Content will be loaded dynamically by templates.js -->
     <div id="footer-placeholder"></div>
 
-    <!-- JavaScript Files -->
-    <script src="js/movieApi.js"></script> <!-- Handles fetching and caching content data -->
-    <script src="js/templates.js"></script> <!-- Loads reusable HTML templates -->
-    <script src="js/main.js"></script> <!-- Main script for global functionalities and homepage content -->
-    <script src="js/auth.js"></script> <!-- Manages user authentication (login/signup) -->
-    <script src="js/watchlist.js"></script> <!-- Handles user watchlist functionality -->
-    <script src="js/notifications.js"></script> <!-- Displays toast-like notifications -->
+    <!-- JavaScript Files (as modules) -->
+    <!-- Scripts like movieApi.js and notifications.js are now imported by other modules and no longer need to be listed here. -->
+    <script type="module" src="js/templates.js"></script> <!-- Loads reusable HTML templates -->
+    <script type="module" src="js/main.js"></script> <!-- Main script for global functionalities and homepage content -->
+    <script type="module" src="js/auth.js"></script> <!-- Manages user authentication (login/signup) -->
+    <script type="module" src="js/watchlist.js"></script> <!-- Handles user watchlist functionality -->
 </body>
 
 </html>

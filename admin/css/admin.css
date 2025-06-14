@@ -185,6 +185,22 @@ body {
   border-color: var(--primary-color);
 }
 
+/* NEW: Bulk Actions Toolbar */
+.bulk-actions-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: var(--input-background);
+  padding: 0.5rem 1rem;
+  border-radius: var(--button-radius);
+  border: 1px solid var(--primary-color);
+}
+#selection-count {
+  color: var(--text-muted-color);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
 /* --- Data Table --- */
 .table-container {
   background-color: var(--card-background-color);
@@ -212,6 +228,17 @@ body {
   color: var(--text-muted-color);
   white-space: nowrap; /* Keep headers on one line */
 }
+/* NEW: Checkbox cell styling */
+.data-table .checkbox-cell {
+  width: 1%;
+  padding: 0.75rem;
+  text-align: center;
+}
+.data-table input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
 .data-table .id-cell {
   font-family: monospace;
   color: var(--text-muted-color);
@@ -222,6 +249,10 @@ body {
 }
 .data-table tbody tr:hover {
   background-color: var(--input-background);
+}
+/* NEW: Selected row style */
+.data-table tbody tr.selected {
+  background-color: rgba(99, 102, 241, 0.2); /* A tint of primary color */
 }
 
 .table-poster-cell {
@@ -261,16 +292,19 @@ body {
   display: flex;
 }
 
+/* FIXED: Re-engineered modal for robust scrolling */
 .admin-modal {
   background-color: #020617;
   border: 1px solid var(--border-color-light);
   border-radius: var(--modal-radius);
-  padding: 2rem;
   width: 90%;
   max-width: 800px;
-  position: relative;
   max-height: 90vh;
-  overflow-y: auto;
+  position: relative;
+  /* Flexbox structure to control scrolling */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Important: prevents the container from scrolling */
 }
 
 .modal-close-btn {
@@ -283,11 +317,36 @@ body {
   cursor: pointer;
   font-size: 1.5rem;
   line-height: 1;
+  z-index: 1; /* Ensure it's above the header */
 }
 
+/* Modal header is now a flex item */
 .admin-modal h2 {
   font-size: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin: 0; /* Reset margin */
+  padding: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color-medium);
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+/* The form is now the primary scrollable area */
+.admin-modal form {
+  /* Use a flex layout to separate the body from the actions */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Takes up remaining vertical space */
+  overflow-y: auto; /* THIS is where the main scrollbar will appear */
+}
+
+/* NEW: This wrapper is implied by targeting all form groups */
+.admin-modal form > .form-group,
+.admin-modal form > .form-group-grid {
+  padding: 0 2rem; /* Add horizontal padding */
+}
+/* Add vertical padding to the first element */
+.admin-modal form > :first-child {
+  padding-top: 1.5rem;
 }
 
 .admin-modal .form-input {
@@ -299,13 +358,21 @@ body {
   cursor: not-allowed;
 }
 
+#bulk-json-input {
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+/* Form actions are now the fixed footer */
 .form-actions {
-  margin-top: 2rem;
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
+  margin-top: auto; /* Push to the bottom */
+  padding: 1.5rem 2rem; /* Add self-contained padding */
   border-top: 1px solid var(--border-color-medium);
-  padding-top: 1.5rem;
+  background-color: #020617; /* Match modal background */
+  flex-shrink: 0; /* Prevent from shrinking */
 }
 
 .form-group-grid {
@@ -627,58 +694,38 @@ body {
 
 /* [FIX #3] NEW: Styles for Admin Reply Modal */
 .original-post {
-    background-color: var(--input-background);
-    border: 1px solid var(--border-color-medium);
-    border-radius: var(--button-radius);
-    padding: 1rem;
-    margin-bottom: 1.5rem;
+  background-color: var(--input-background);
+  border: 1px solid var(--border-color-medium);
+  border-radius: var(--button-radius);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .original-post p {
-    margin: 0 0 0.5rem 0;
-    color: var(--text-muted-color);
-    font-size: 0.9rem;
-    line-height: 1.5;
+  margin: 0 0 0.5rem 0;
+  color: var(--text-muted-color);
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .original-post p:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .original-post .post-meta {
-    margin-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
 .original-post .post-text {
-    color: #fff;
-    font-size: 1rem;
+  color: #fff;
+  font-size: 1rem;
 }
 
 .original-post strong {
-    color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 .original-post em {
-    font-size: 0.8rem;
-    color: var(--text-muted-color);
-}
-
-/* --- Responsive (Basic) --- */
-@media (max-width: 768px) {
-  .admin-container {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "header"
-      "main";
-  }
-  .admin-sidebar {
-    /* For now, we hide it. Later we can make it a toggle menu */
-    display: none;
-  }
-  .admin-main-content {
-    padding: 1.5rem;
-  }
-  .admin-logo span {
-    display: none;
-  }
+  font-size: 0.8rem;
+  color: var(--text-muted-color);
 }
