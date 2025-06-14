@@ -1,60 +1,146 @@
  ---
-
-### **`content-schema.md`**
-
-```markdown
-# Content Data Schema
-
-This document describes the structure for the StreamVerse data files. This documentation covers both the manual editing process and the recommended workflow using the Admin Panel.
-
-The three main data files are:
-
-1.  **`content.json`**: Contains core metadata for movies, series, and animes.
-2.  **`media.json`**: Contains media assets (trailers, screenshots) for each piece of content.
-3.  **`episodes.json`**: Contains season and episode data for series and animes.
-
----
-
-## `content.json` Schema
-
-Each item in the `content.json` array represents a single piece of content and has the following structure:
+### `content-schema.json`
 
 ```json
 {
-    "id": "unique-content-id",                  // String: Unique identifier (e.g., "interstellar"). REQUIRED.
-    "type": "movie",                            // String: Type of content ("movie", "webseries", "animes"). REQUIRED.
-    "title": "Title of the Content",            // String: Main title. REQUIRED.
-    "description": "Short summary for sliders.",// String: A brief, one-sentence summary. REQUIRED.
-    "fullDescription": "Detailed synopsis.",    // String: Full storyline for content detail pages. REQUIRED.
-    "year": "2025",                             // String: Release year or year range (e.g., "2020-2023"). REQUIRED.
-    "duration": "2h 43m",                       // String: Runtime (for movies) or total seasons (for series). REQUIRED.
-    "genres": ["Sci-Fi", "Adventure"],          // Array of Strings: List of genres. REQUIRED.
-    "rating": "9.2",                            // String: Rating value (e.g., "0.0" to "10.0"). REQUIRED.
-    "director": "Lena Khan",                    // String: Director's name (for movies).
-    "studio": "Studio Name",                    // String: Production studio (for anime/series).
-    "cast": ["Elara Vance", "Jaxson Kael"],     // Array of Strings: Main cast members. REQUIRED.
-    "releaseDate": "October 26, 2025",          // String: Full release date. REQUIRED.
-    "country": "USA",                           // String: Country of origin. REQUIRED.
-    "status": "Released",                       // String: Release status (e.g., "Released", "Ongoing"). REQUIRED.
-    "posterImage": "url/to/poster.jpg",         // String: URL for the content card image. REQUIRED.
-    "heroImage": "url/to/hero.jpg",             // String: URL for the hero banner image. REQUIRED.
-    "tags": ["featured-movie", "trending"],     // Array of Strings: Optional tags for categorization.
-    "languages": ["English", "Spanish"],        // Array of Strings: Available audio languages.
-    "quality": ["4K", "1080p", "HD"]            // Array of Strings: Available video qualities.
+  "projectInfo": "This document describes the data structures and workflows for managing content in the StreamVerse project.",
+  "schemaVersion": "2.0",
+  "authoringTool": "Admin Panel Recommended"
 }
 ```
 
+# Content Data & Management Guide (v2.0)
+
+This document describes the structure for the content data files and the official workflows for adding and managing content using the Admin Panel and Cloudinary.
+
 ---
 
-## `media.json` Schema
+## 1. Image Sourcing and Optimization Workflow (Highly Recommended)
 
-This file is a JSON object where each key is a content `id`.
+All images (posters and banners) should be hosted on **Cloudinary** to ensure high performance and automated optimization. This workflow describes how to get high-quality source images and prepare them for use.
+
+### Step 1: Source High-Quality Images from TMDb
+
+**TMDb (The Movie Database)** is the best source for original posters and background art.
+
+1.  Go to [https://www.themoviedb.org/](https://www.themoviedb.org/).
+2.  Search for the desired movie, series, or anime.
+3.  On the content page, navigate to **Media -> Posters** or **Media -> Backdrops**.
+4.  Click the image you want, then right-click on it and select **"Copy Image Address"**. This gives you a direct URL to the high-resolution image.
+
+### Step 2: Upload to Cloudinary via URL
+
+1.  Log in to your **Cloudinary** account.
+2.  In the Media Library, click **Upload** and switch to the **Web Address** tab.
+3.  Paste the TMDb image URL you copied.
+4.  Cloudinary will fetch the image and add it to your library. Copy the new Cloudinary URL it provides.
+
+### Step 3: Construct the Final, Optimized URL
+
+This is the most critical step for performance. We will add transformation parameters to the base Cloudinary URL.
+
+A base Cloudinary URL looks like this:
+`https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/v123456/folder/image.jpg`
+
+The transformations go between `/upload/` and the version (`v123...`). The most important are `f_auto` and `q_auto`.
+
+-   **`f_auto`**: Automatically delivers the best image format (like **WebP** or AVIF) that the user's browser supports.
+-   **`q_auto`**: Automatically adjusts the compression to the ideal level, reducing file size without sacrificing visual quality.
+
+**Optimized URL Example:**
+`.../image/upload/f_auto,q_auto/v123456/folder/image.jpg`
+
+**Advanced: Adding Resizing**
+For even better performance, specify the image width (`w_...`).
+
+-   **For Banners/Hero Images:** A width of 1920px is ideal. The URL becomes:
+    `.../image/upload/f_auto,q_auto,w_1920/v123/interstellar-banner.jpg`
+-   **For Posters:** A width of 500px is excellent for grids and cards. The URL becomes:
+    `.../image/upload/f_auto,q_auto,w_500/v123/interstellar-poster.jpg`
+
+**This final, optimized URL is what you will use in the Admin Panel.**
+
+---
+
+## 2. Content Management Methods
+
+There are two ways to add and manage content. Using the Admin Panel is the standard, recommended method.
+
+### Method 1: Using the Admin Panel (Recommended)
+
+This is the safest and easiest way to manage content.
+
+1.  **Prepare Your Image URLs:** Follow the complete **Image Sourcing and Optimization Workflow** above to get your final, optimized Cloudinary URLs for both the poster and hero image.
+
+2.  **Add New Content:**
+    -   Navigate to the **Content** tab in the Admin Panel.
+    -   Click the **"Add New Content"** button.
+    -   Fill in all the metadata fields (Title, Year, Description, etc.).
+    -   In the `Poster Image URL` and `Hero Image URL` fields, paste the **final, optimized Cloudinary URLs** you created.
+    -   Click **"Save Content"**. This will add the new entry to `content.json`.
+
+3.  **Add Media & Episodes:**
+    -   After saving, find your new content in the table.
+    -   Click the **"Media"** button on its row. This will take you to the Media Manager.
+    -   In the Media Manager, you can add Trailers, Screenshots, and Episode/Download links. This will automatically update `media.json` and `episodes.json` correctly.
+
+### Method 2: Manual File Editing (Advanced)
+
+This method is for initial bulk setup or developers comfortable with JSON. It is prone to error if not done carefully.
+
+1.  **`content.json`**:
+    -   Add a new object to the array. Ensure all required fields are filled.
+    -   The `id` must be a unique, URL-friendly string (e.g., "the-grand-budapest-hotel").
+    -   For `posterImage` and `heroImage`, use your final, optimized Cloudinary URLs.
+
+2.  **`media.json`**:
+    -   Add a new key-value pair. The key must be the **exact same `id`** from `content.json`.
+    -   The value should be an object containing `trailers` and `screenshots`.
+
+3.  **`episodes.json`**:
+    -   Add a new key-value pair for series/anime. The key must be the **exact same `id`**.
+    -   The value should be an object structured with seasons, qualities, and episode lists (see schema below).
+
+---
+
+## 3. Data File Schemas
+
+### `content.json` Schema
+
+An array of content objects. Each object has the following structure:
 
 ```json
 {
-    "interstellar": {
+    "id": "unique-content-id",              // String: REQUIRED. URL-friendly unique identifier (e.g., "interstellar").
+    "type": "movie",                        // String: REQUIRED. Type of content ("movie", "webseries", "animes").
+    "title": "Title of the Content",        // String: REQUIRED.
+    "description": "Short summary.",        // String: REQUIRED. Used for cards and sliders.
+    "fullDescription": "Detailed synopsis.",// String: REQUIRED. Used for content detail pages.
+    "year": "2023",                         // String: REQUIRED. Release year or range (e.g., "2020-2023").
+    "duration": "2h 43m",                   // String: REQUIRED. Runtime for movies or season count for series.
+    "genres": ["Sci-Fi", "Adventure"],      // Array of Strings: REQUIRED.
+    "rating": "9.2",                        // String: REQUIRED.
+    "director": "Lena Khan",                // String: REQUIRED for movies.
+    "studio": "Studio Name",                // String: REQUIRED for series/animes.
+    "cast": ["Actor One", "Actor Two"],     // Array of Strings: REQUIRED.
+    "languages": ["English", "Japanese"],   // Array of Strings: REQUIRED.
+    "quality": ["HD", "1080p"],             // Array of Strings: REQUIRED.
+    "posterImage": "https://res.cloudinary.com/.../f_auto,q_auto,w_500/...", // String: REQUIRED. Optimized Cloudinary URL.
+    "heroImage": "https://res.cloudinary.com/.../f_auto,q_auto,w_1920/...",   // String: REQUIRED. Optimized Cloudinary URL.
+    "tags": ["featured", "trending"]        // Array of Strings: Optional tags for categorization.
+}
+```
+
+### `media.json` Schema
+
+An object where each key is a content `id`.
+
+```json
+{
+    "unique-content-id": {
         "trailers": {
-            "Official Trailer": "https://www.youtube.com/embed/zSWdZVtFR7U"
+            "Official": "https://youtube.com/embed/...",
+            "Hindi Dub": "https://youtube.com/embed/..."
         },
         "screenshots": [
             "https://res.cloudinary.com/.../screenshot1.jpg",
@@ -64,69 +150,32 @@ This file is a JSON object where each key is a content `id`.
 }
 ```
 
----
+### `episodes.json` Schema
 
-## `episodes.json` Schema
-
-This file is a JSON object where each key is a series/anime `id`. The structure supports seasons, qualities, and episodes.
+An object where each key is a series/anime `id`. **Note the nested structure managed by the admin panel.**
 
 ```json
 {
-    "arcane-league-of-legends": {
+    "unique-content-id": {
         "seasons": {
             "1": {
                 "qualities": {
                     "1080p": [
-                        { "episodeNumber": 1, "title": "Welcome to the Playground", "downloadUrl": "..." },
-                        { "episodeNumber": 2, "title": "Some Mysteries Are Better Left Unsolved", "downloadUrl": "..." }
+                        { "episodeNumber": 1, "title": "The First Step", "downloadUrl": "..." },
+                        { "episodeNumber": 2, "title": "The Journey Begins", "downloadUrl": "..." }
                     ],
-                    "4K": [
-                        { "episodeNumber": 1, "title": "Welcome to the Playground", "downloadUrl": "..." }
+                    "720p": [
+                        { "episodeNumber": 1, "title": "The First Step", "downloadUrl": "..." }
                     ]
                 }
+            },
+            "2": {
+                // ... structure repeats for season 2
             }
         },
-        "zipFiles": [] // Optional place for season pack zip files
+        "zipFiles": [
+            // Zip file links can also be managed here
+        ]
     }
 }
-```
-
 ---
-
-## Adding & Managing Content
-
-### **Method 1: Using the Admin Panel (Recommended)**
-
-The Admin Panel is the safest and easiest way to manage content. It automatically creates related entries in all necessary files.
-
-1.  **Navigate to the Admin Panel** and click on the **"Content"** tab.
-2.  Click the **"Add New Content"** button.
-3.  **Fill out the form** with the movie's details (Title, Type, Year, Descriptions, etc.).
-4.  **Add Images using the Cloudinary Workflow:**
-    *   Find a high-quality Poster or Banner on a source like [TMDb](https://www.themoviedb.org/). Right-click and **Copy Image Address**.
-    *   Go to your [Cloudinary](https://cloudinary.com/) dashboard, choose **Upload**, and select the **Web Address** option. Paste the URL to upload it.
-    *   Copy the URL Cloudinary provides.
-    *   **Optimize the URL** by adding `f_auto,q_auto` and a width parameter (e.g., `w_500` for posters, `w_1920` for banners) after `/upload/`.
-    *   **Example Optimized URL:** `https://res.cloudinary.com/<YOUR_NAME>/image/upload/f_auto,q_auto,w_500/v123/poster.jpg`
-    *   Paste this final optimized URL into the `Poster Image URL` or `Hero Image URL` field in the admin form.
-5.  **Save the Content.** The server will create the entry in `content.json` and the corresponding placeholder entries in `media.json` and `episodes.json`.
-6.  **Add Media and Episodes:** After saving, go to the `Media` link for that content to add trailers, screenshots, and episodes through the dedicated media manager interface.
-
-### **Method 2: Manual Editing**
-
-This method is for initial setup or bulk changes only. Be careful, as errors in JSON formatting can break the application.
-
-1.  **Add Entry to `content.json`:**
-    *   Manually add a new object to the `content.json` array.
-    *   Fill in all the required fields.
-    *   For `posterImage` and `heroImage`, follow the Cloudinary workflow described in Method 1 and paste the final optimized URL directly into the JSON file.
-
-2.  **Add Entry to `media.json`:**
-    *   Create a new key using the same `id` as the content you just added.
-    *   Add `trailers` (use YouTube embed links) and `screenshots` (use optimized Cloudinary links).
-
-3.  **Add Entry to `episodes.json` (for Series/Anime):**
-    *   Create a new key using the same `id` as the series.
-    *   Create the nested structure for `seasons` -> `qualities` -> `episodes` as shown in the schema above.
-
-```
