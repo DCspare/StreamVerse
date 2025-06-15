@@ -20,20 +20,32 @@
       "dest": "/admin/index.html"
     },
     {
-      "src": "/(.*\\.(?:js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot))",
-      "dest": "/$1"
-    },
-    {
       "src": "/",
       "dest": "/index.html"
     },
     {
-      "src": "/contentDetails.html",
-      "dest": "/contentDetails.html"
+      "src": "/index.html",
+      "dest": "/index.html"
     },
     {
-      "src": "/(.*)",
-      "dest": "server.js"
+      "src": "/movies.html",
+      "dest": "/movies.html"
+    },
+    {
+      "src": "/series.html",
+      "dest": "/series.html"
+    },
+    {
+      "src": "/animes.html",
+      "dest": "/animes.html"
+    },
+    {
+      "src": "/contact.html",
+      "dest": "/contact.html"
+    },
+    {
+      "src": "/contentDetails.html",
+      "dest": "/contentDetails.html"
     }
   ]
 }
