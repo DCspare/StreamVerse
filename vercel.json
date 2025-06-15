@@ -12,12 +12,24 @@
       "dest": "server.js"
     },
     {
+      "src": "/admin/?$",
+      "dest": "/admin/index.html"
+    },
+    {
       "src": "/admin/(.*)",
       "dest": "/admin/index.html"
     },
     {
       "src": "/(.*\\.(?:js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot))",
       "dest": "/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/contentDetails.html",
+      "dest": "/contentDetails.html"
     },
     {
       "src": "/(.*)",
