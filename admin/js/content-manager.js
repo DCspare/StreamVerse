@@ -244,6 +244,7 @@ function clearSelection() {
 function openBulkAddModal() {
   document.getElementById("bulk-add-modal")?.classList.add("visible");
   document.getElementById("bulk-json-input").value = "";
+  document.body.classList.add("modal-open"); // ADDED: Lock body scroll
 }
 
 async function handleBulkAddSubmit(event) {
@@ -372,12 +373,14 @@ async function handleFormSubmit(event) {
 
 function openModal(modalId) {
   document.getElementById(modalId)?.classList.add("visible");
+  document.body.classList.add("modal-open"); // ADDED: Lock body scroll
 }
 
 function closeModal() {
   document.querySelectorAll(".modal-overlay.visible").forEach((modal) => {
     modal.classList.remove("visible");
   });
+  document.body.classList.remove("modal-open"); // ADDED: Unlock body scroll
 }
 
 function openAddModal() {

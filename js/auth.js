@@ -133,6 +133,10 @@ function checkLoginStatus() {
 // Initialization logic runs when the module is imported.
 ensureTemplatesLoaded().then(() => {
   console.log("auth.js: Templates loaded, initializing auth UI.");
+
+  // FIX: Forcefully hide the modal on initial load to prevent it from appearing.
+  hideAuthModal();
+
   checkLoginStatus();
 
   const authToggleBtn = document.getElementById("authToggle");

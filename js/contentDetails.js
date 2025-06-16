@@ -120,9 +120,13 @@ function initializePageEventListeners() {
       if (watchlistBtn) {
         e.preventDefault();
         const contentId = watchlistBtn.dataset.contentId;
-        // FIXED: Direct call to imported function, no 'window' or type checking.
         if (contentId) {
-          addToWatchlist(contentId);
+          // FIX: Check for logged-in user before adding to watchlist
+          if (localStorage.getItem("loggedInUser")) {
+            addToWatchlist(contentId);
+          } else {
+            showAuthModal("login");
+          }
         } else {
           console.error("Watchlist button missing contentId.");
           showNotification("Could not update watchlist.", { type: "error" });
@@ -460,7 +464,6 @@ function displayCommentsAndForm(contentId, allSubmissions = []) {
     requests.forEach((r) => requestsList.appendChild(createCommentElement(r)));
   }
 
-  // Note: The original HTML for tabs didn't have a .tab-count span. The logic here is preserved in case you add it back.
   const commentsCountEl = commentsTab?.querySelector(".tab-count");
   const requestsCountEl = requestsTab?.querySelector(".tab-count");
   if (commentsCountEl) commentsCountEl.textContent = comments.length;
@@ -475,14 +478,18 @@ function displayCommentsAndForm(contentId, allSubmissions = []) {
     "comment-type-dropdown-placeholder"
   );
 
+  // FIX: Handle a neutral state for the form UI
   const updateFormUI = (type) => {
     if (type === "request") {
       submitBtn.textContent = "Submit Request";
       commentText.placeholder =
         'e.g., "Request for 1080p version" or "Request for subtitles"';
-    } else {
+    } else if (type === "comment") {
       submitBtn.textContent = "Submit Comment";
       commentText.placeholder = "Write a public comment...";
+    } else {
+      submitBtn.textContent = "Submit";
+      commentText.placeholder = "Please select a submission type above...";
     }
   };
 
@@ -554,15 +561,17 @@ function displayCommentsAndForm(contentId, allSubmissions = []) {
         { type: "success" }
       );
       commentForm.reset();
+      updateCommentFormState();
 
+      // FIX: Reset dropdown to neutral state
       const trigger = typeDropdownPlaceholder.querySelector(
         ".custom-select-trigger"
       );
       if (trigger) {
-        trigger.textContent = "Comment";
-        trigger.dataset.value = "comment";
+        trigger.textContent = "Select a Type";
+        trigger.dataset.value = "";
       }
-      updateFormUI("comment");
+      updateFormUI(""); // Reset UI to neutral state
     } catch (error) {
       console.error("Failed to submit post:", error);
       showNotification("Failed to submit. Please try again.", {
@@ -578,13 +587,14 @@ function displayCommentsAndForm(contentId, allSubmissions = []) {
     { value: "comment", text: "Comment" },
     { value: "request", text: "Request" },
   ];
+  // FIX: Set dropdown to a neutral state on initialization
   createCustomDropdown(
     "comment-type-dropdown-placeholder",
-    "Comment",
+    "Select a Type", // Use neutral text
     commentTypeOptions,
     updateFormUI
   );
-  updateFormUI("comment");
+  updateFormUI(""); // Set initial UI to neutral
 
   document.getElementById("commentLoginLink").addEventListener("click", (e) => {
     e.preventDefault();

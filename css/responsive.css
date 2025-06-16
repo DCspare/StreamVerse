@@ -38,7 +38,7 @@
     position: fixed;
     top: 0;
     /* Change for smooth slide-in */
-    transform: translateX(100%); 
+    transform: translateX(100%);
     width: 100%;
     height: 100vh;
     background-color: rgba(15, 23, 42, 0.95);
@@ -48,7 +48,9 @@
     z-index: 999;
     overflow-y: auto;
     /* Adjusted padding to make space for close button and reduce top space */
-    padding-top: var(--header-height); /* Keep menu content below fixed header */
+    padding-top: var(
+      --header-height
+    ); /* Keep menu content below fixed header */
     padding-bottom: 2rem; /* Add some bottom padding for scroll */
     box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
     /* Change transition property */
@@ -74,7 +76,12 @@
   }
   .main-nav .nav-link.active,
   .main-nav .nav-link:hover {
-    background-color: rgba(139, 92, 246, 0.2); /* Light purple background on active/hover */
+    background-color: rgba(
+      139,
+      92,
+      246,
+      0.2
+    ); /* Light purple background on active/hover */
     color: var(--primary-color); /* Primary color for text */
   }
   /* Mobile menu close button position */
@@ -88,50 +95,58 @@
 
   /* Specific styling for dropdown wrappers inside main-nav on mobile */
   .main-nav .nav-item-dropdown-wrapper {
-      width: 100%;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* Consistent separator */
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* Consistent separator */
   }
-  .main-nav .nav-item-dropdown-wrapper:last-of-type { /* Adjust for the last wrapper if needed */
-      border-bottom: none;
+  .main-nav .nav-item-dropdown-wrapper:last-of-type {
+    /* Adjust for the last wrapper if needed */
+    border-bottom: none;
   }
   .main-nav .nav-item-dropdown-wrapper > .nav-link {
-      padding: 1.2rem 1.5rem; /* Match other nav-link padding */
-      width: 100%;
-      display: flex; /* Allow content to be centered or justified */
-      justify-content: space-between; /* Push toggle icon to the right if applicable */
-      align-items: center;
-      border-bottom: none; /* Remove duplicate border */
+    padding: 1.2rem 1.5rem; /* Match other nav-link padding */
+    width: 100%;
+    display: flex; /* Allow content to be centered or justified */
+    justify-content: space-between; /* Push toggle icon to the right if applicable */
+    align-items: center;
+    border-bottom: none; /* Remove duplicate border */
   }
   /* Style for the dropdown menu itself when open on mobile */
   .main-nav .genre-dropdown,
   .main-nav .watchlist-dropdown,
   .main-nav .az-dropdown {
-      position: static; /* Position statically within the flow of the mobile menu */
-      width: 100%;
-      border: none; /* No extra border */
-      box-shadow: none; /* No extra shadow */
-      background: transparent; /* No extra background */
-      padding: 0 0 1rem 2rem; /* Indent and add padding */
-      opacity: 1; /* Always visible when active */
-      visibility: visible; /* Always visible when active */
-      transition: none; /* No transition for internal dropdown on mobile */
+    position: static; /* Position statically within the flow of the mobile menu */
+    width: 100%;
+    border: none; /* No extra border */
+    box-shadow: none; /* No extra shadow */
+    background: transparent; /* No extra background */
+    padding: 0 0 1rem 2rem; /* Indent and add padding */
+    opacity: 1; /* Always visible when active */
+    visibility: visible; /* Always visible when active */
+    transition: none; /* No transition for internal dropdown on mobile */
   }
   .main-nav .dropdown-item {
-      padding: 0.6rem 1rem; /* Adjust padding for sub-items */
-      font-size: 0.95rem;
-      text-align: left;
-      border-radius: 4px;
-      margin-bottom: 0.25rem;
-      background-color: rgba(255, 255, 255, 0.05); /* Light background for sub-items */
+    padding: 0.6rem 1rem; /* Adjust padding for sub-items */
+    font-size: 0.95rem;
+    text-align: left;
+    border-radius: 4px;
+    margin-bottom: 0.25rem;
+    background-color: rgba(
+      255,
+      255,
+      255,
+      0.05
+    ); /* Light background for sub-items */
   }
   .main-nav .az-dropdown {
-      grid-template-columns: repeat(4, 1fr); /* Adjust grid for A-Z in mobile menu */
-      padding-right: 2rem; /* Add some padding on the right */
+    grid-template-columns: repeat(
+      4,
+      1fr
+    ); /* Adjust grid for A-Z in mobile menu */
+    padding-right: 2rem; /* Add some padding on the right */
   }
   .main-nav .watchlist-dropdown-item {
-      padding: 0.75rem 1rem;
+    padding: 0.75rem 1rem;
   }
-
 
   .mobile-menu-btn {
     display: flex;
@@ -216,8 +231,9 @@
   }
 
   /* Content Card Sizing for mobile */
+  /* FIX: Revert card to fixed width for horizontal scrolling rows (like on homepage) */
   .content-card {
-    width: 130px; /* Adjusted to a smaller, fixed width for better fit */
+    width: 130px;
   }
   .section-title {
     font-size: 1.15rem;
@@ -225,10 +241,16 @@
   .content-row {
     gap: 0.75rem;
   }
+
+  /* FIX: Styles for the dedicated category pages (movies, animes, etc.) */
   .content-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); /* Adjusted grid for mobile cards */
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
+  }
+  /* This makes cards inside the grid take up the full column width */
+  .content-grid .content-card {
+    width: 100%;
   }
 
   /* Card UI Redesign for Mobile */
@@ -342,7 +364,7 @@
     margin-top: 1.5rem;
   }
 
-  .icon-btn{
+  .icon-btn {
     display: block;
   }
 
@@ -396,23 +418,23 @@
 
   /* Content Information Section */
   .movie-info-section .info-grid {
-      align-items: center; /* Center items on mobile */
+    align-items: center; /* Center items on mobile */
   }
 
   .movie-info-section .info-item {
-      text-align: center; /* Center text within info items */
-      width: 100%; /* Take full width on mobile */
+    text-align: center; /* Center text within info items */
+    width: 100%; /* Take full width on mobile */
   }
 
   /* Download Section */
   .download-section .section-title {
-      font-size: 1.25rem;
+    font-size: 1.25rem;
   }
   .download-subsection h3 {
-      font-size: 1rem;
+    font-size: 1rem;
   }
   .download-links .btn {
-      width: 100%; /* Make download buttons full width on mobile */
+    width: 100%; /* Make download buttons full width on mobile */
   }
 
   /* Comment Section */
@@ -437,7 +459,7 @@
   .screenshots-grid {
     column-count: 2;
   }
-  
+
   /* Responsive Lightbox */
   .lightbox-overlay {
     padding: 1rem; /* Reduced padding on smaller screens */
@@ -562,7 +584,6 @@
     margin-bottom: 0.5rem;
   }
 
-
   .genre-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -575,7 +596,7 @@
   }
   .social-links {
     justify-content: flex-start;
-}
+  }
   .app-download-buttons {
     align-items: flex-start;
   }
@@ -593,7 +614,7 @@
     height: 50vh; /* Slightly smaller height on tablet */
     min-height: 400px;
   }
-  
+
   .movie-detail-content-wrapper {
     flex-direction: row; /* Keep in a row on tablet */
     align-items: center;
@@ -633,22 +654,22 @@
 
   /* Content Information Section */
   .movie-info-section .info-grid {
-      align-items: flex-start; /* Left-align items on tablet */
+    align-items: flex-start; /* Left-align items on tablet */
   }
 
   .movie-info-section .info-item {
-      text-align: left; /* Left-align text within info items */
+    text-align: left; /* Left-align text within info items */
   }
 
   /* Download Section */
   .download-section .section-title {
-      font-size: 1.4rem;
+    font-size: 1.4rem;
   }
   .download-subsection h3 {
-      font-size: 1.1rem;
+    font-size: 1.1rem;
   }
   .download-links .btn {
-      width: auto; /* Auto width on tablet */
+    width: auto; /* Auto width on tablet */
   }
 
   /* Comment Section */
@@ -746,7 +767,6 @@
     margin-bottom: 0.75rem;
   }
 
-
   .genre-grid {
     grid-template-columns: repeat(4, 1fr);
   }
@@ -759,7 +779,7 @@
     height: 60vh;
     min-height: 400px;
   }
-  
+
   .movie-detail-content-wrapper {
     flex-direction: row;
     align-items: center;
@@ -799,22 +819,22 @@
 
   /* Content Information Section */
   .movie-info-section .info-grid {
-      align-items: flex-start; /* Left-align items on desktop */
+    align-items: flex-start; /* Left-align items on desktop */
   }
 
   .movie-info-section .info-item {
-      text-align: left; /* Left-align text within info items */
+    text-align: left; /* Left-align text within info items */
   }
 
   /* Download Section */
   .download-section .section-title {
-      font-size: 1.5rem;
+    font-size: 1.5rem;
   }
   .download-subsection h3 {
-      font-size: 1.2rem;
+    font-size: 1.2rem;
   }
   .download-links .btn {
-      width: auto;
+    width: auto;
   }
 
   /* Comment Section */

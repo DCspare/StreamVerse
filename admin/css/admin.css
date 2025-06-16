@@ -230,7 +230,7 @@ body {
 }
 /* NEW: Checkbox cell styling */
 .data-table .checkbox-cell {
-  width: 1%;
+  width: 97%;
   padding: 0.75rem;
   text-align: center;
 }
@@ -692,40 +692,47 @@ body {
   font-weight: bold;
 }
 
-/* [FIX #3] NEW: Styles for Admin Reply Modal */
+/* [FIX #3] REVISED: Styles for Admin Reply Modal */
 .original-post {
+  /* Make it look like a disabled form field */
   background-color: var(--input-background);
   border: 1px solid var(--border-color-medium);
   border-radius: var(--button-radius);
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.original-post p {
-  margin: 0 0 0.5rem 0;
-  color: var(--text-muted-color);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem; /* Space between this and the next field */
   font-size: 0.9rem;
   line-height: 1.5;
 }
 
-.original-post p:last-child {
-  margin-bottom: 0;
-}
-
-.original-post .post-meta {
-  margin-bottom: 0.75rem;
-}
-
-.original-post .post-text {
-  color: #fff;
-  font-size: 1rem;
-}
-
+/* Style the "Original Comment:" label inside the box */
 .original-post strong {
+  display: block;
   color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 0.35rem; /* Space between label and the comment text */
+  font-size: 0.8rem;
 }
 
+/* Style the actual comment text */
+.original-post .post-text {
+  margin: 0;
+  padding: 0;
+  color: #fff; /* Brighter text for the comment */
+}
+
+/* Remove old, conflicting styles */
+.original-post p,
 .original-post em {
-  font-size: 0.8rem;
-  color: var(--text-muted-color);
+  margin: 0;
+  padding: 0;
+  line-height: inherit;
+  font-size: inherit;
+  font-style: normal;
+  color: inherit;
+}
+
+/* NEW: Add this class to the end of your file */
+body.no-scroll,
+body.no-scroll-modal {
+  overflow: hidden;
 }

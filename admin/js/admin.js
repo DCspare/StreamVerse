@@ -19,7 +19,8 @@ const routes = {
   },
   comments: {
     view: "/admin/views/comments.html",
-    script: "/admin/js/comments-manager.js",
+    // FIXED: Corrected filename from "comments-manager.js" to "comment-manager.js"
+    script: "/admin/js/comment-manager.js",
     init: "initializeCommentManager",
   },
   requests: {

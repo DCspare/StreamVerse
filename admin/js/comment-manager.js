@@ -93,12 +93,14 @@ function openCommentReplyModal(commentId, contentId, text) {
   document
     .getElementById("comment-reply-modal-overlay")
     .classList.add("visible");
+  document.body.classList.add("modal-open"); // ADD THIS LINE
 }
 
 function closeCommentReplyModal() {
   document
     .getElementById("comment-reply-modal-overlay")
     ?.classList.remove("visible");
+  document.body.classList.remove("modal-open"); // ADD THIS LINE
 }
 
 async function handleReplySubmit(e) {
