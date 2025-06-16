@@ -212,13 +212,14 @@ body {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+  table-layout: fixed; /* Add this for more predictable column behavior */
 }
 .data-table th,
 .data-table td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border-color-light);
   vertical-align: middle;
-  white-space: normal; /* Allow cell content to wrap */
+  white-space: normal;
 }
 .data-table th {
   font-size: 0.8rem;
@@ -226,12 +227,12 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--text-muted-color);
-  white-space: nowrap; /* Keep headers on one line */
+  white-space: nowrap;
 }
-/* NEW: Checkbox cell styling */
+
+/* FIXED: Corrected checkbox width from 97% to 1% */
 .data-table .checkbox-cell {
-  width: 97%;
-  padding: 0.75rem;
+  width: 50px; /* Use a fixed pixel width for stability */
   text-align: center;
 }
 .data-table input[type="checkbox"] {
@@ -239,28 +240,33 @@ body {
   width: 16px;
   height: 16px;
 }
+
+/* FIXED: Adjusted ID cell styles */
 .data-table .id-cell {
   font-family: monospace;
   color: var(--text-muted-color);
-  word-break: break-all; /* Force long IDs to wrap */
+  word-break: break-word; /* Use a less aggressive word break */
+  min-width: 150px; /* Give it a minimum width to prevent collapsing */
+  /* width: 150px;  */
+  width: 335px; 
 }
+
 .data-table tbody tr:last-child td {
   border-bottom: none;
 }
 .data-table tbody tr:hover {
   background-color: var(--input-background);
 }
-/* NEW: Selected row style */
 .data-table tbody tr.selected {
-  background-color: rgba(99, 102, 241, 0.2); /* A tint of primary color */
+  background-color: rgba(99, 102, 241, 0.2);
 }
 
 .table-poster-cell {
-  width: 1%;
+  width: 80px; /* Use a fixed pixel width */
 }
 .table-poster {
-  width: 60px; /* Increased poster size */
-  height: 90px; /* Increased poster size */
+  width: 60px;
+  height: 90px;
   object-fit: cover;
   border-radius: 4px;
   background-color: var(--input-background);
@@ -292,7 +298,6 @@ body {
   display: flex;
 }
 
-/* FIXED: Re-engineered modal for robust scrolling */
 .admin-modal {
   background-color: #020617;
   border: 1px solid var(--border-color-light);
@@ -301,10 +306,9 @@ body {
   max-width: 800px;
   max-height: 90vh;
   position: relative;
-  /* Flexbox structure to control scrolling */
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Important: prevents the container from scrolling */
+  overflow: hidden;
 }
 
 .modal-close-btn {
@@ -317,34 +321,30 @@ body {
   cursor: pointer;
   font-size: 1.5rem;
   line-height: 1;
-  z-index: 1; /* Ensure it's above the header */
+  z-index: 1;
 }
 
-/* Modal header is now a flex item */
 .admin-modal h2 {
   font-size: 1.5rem;
-  margin: 0; /* Reset margin */
+  margin: 0;
   padding: 2rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--border-color-medium);
-  flex-shrink: 0; /* Prevent header from shrinking */
+  flex-shrink: 0;
 }
 
-/* The form is now the primary scrollable area */
 .admin-modal form {
-  /* Use a flex layout to separate the body from the actions */
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Takes up remaining vertical space */
-  overflow-y: auto; /* THIS is where the main scrollbar will appear */
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
-/* NEW: This wrapper is implied by targeting all form groups */
 .admin-modal form > .form-group,
 .admin-modal form > .form-group-grid {
-  padding: 0 2rem; /* Add horizontal padding */
+  padding: 0 2rem;
 }
-/* Add vertical padding to the first element */
+
 .admin-modal form > :first-child {
   padding-top: 1.5rem;
 }
@@ -363,16 +363,15 @@ body {
   font-size: 0.9rem;
 }
 
-/* Form actions are now the fixed footer */
 .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
-  margin-top: auto; /* Push to the bottom */
-  padding: 1.5rem 2rem; /* Add self-contained padding */
+  margin-top: auto;
+  padding: 1.5rem 2rem;
   border-top: 1px solid var(--border-color-medium);
-  background-color: #020617; /* Match modal background */
-  flex-shrink: 0; /* Prevent from shrinking */
+  background-color: #020617;
+  flex-shrink: 0;
 }
 
 .form-group-grid {
@@ -387,7 +386,7 @@ body {
 }
 
 [data-type-specific] {
-  display: none; /* Hide by default */
+  display: none;
 }
 
 /* --- Media Management Page --- */
@@ -500,7 +499,6 @@ body {
   color: var(--text-muted-color);
 }
 
-/* NEW: Styles for Seasons & Episodes Accordion */
 .seasons-accordion {
   margin-top: 1.5rem;
   display: flex;
@@ -512,7 +510,7 @@ body {
   background-color: var(--input-background);
   border: 1px solid var(--border-color-medium);
   border-radius: var(--button-radius);
-  overflow: hidden; /* Important for containing border-radius */
+  overflow: hidden;
 }
 
 .season-header {
@@ -539,7 +537,7 @@ body {
 
 .season-content {
   padding: 1rem;
-  display: none; /* Collapsed by default */
+  display: none;
 }
 
 .season-item.open .season-content {
@@ -574,11 +572,10 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0.75rem;
-  background-color: #020617; /* Darker than the season item bg */
+  background-color: #020617;
   border-radius: 4px;
   font-size: 0.85rem;
 }
-/* This container will hold our edit form */
 .episode-edit-form-container {
   padding: 0;
   background: none;
@@ -638,7 +635,7 @@ body {
   border: 1px dashed var(--border-color-medium);
   border-radius: var(--button-radius);
   background-color: #020617;
-  width: 100%; /* Make form take full width inside container */
+  width: 100%;
 }
 .episode-edit-form-container .add-episode-form {
   margin-top: 0;
@@ -650,7 +647,6 @@ body {
   font-size: 1rem;
 }
 
-/* NEW: Styles for Confirmation Notifications */
 .notification.confirm {
   display: flex;
   flex-direction: column;
@@ -684,7 +680,7 @@ body {
   border-color: var(--secondary-color);
 }
 .notification-btn.confirm-btn:hover {
-  background-color: #e64a4a; /* Darker red */
+  background-color: #e64a4a;
 }
 
 .notification-btn.undo-btn {
@@ -692,35 +688,30 @@ body {
   font-weight: bold;
 }
 
-/* [FIX #3] REVISED: Styles for Admin Reply Modal */
 .original-post {
-  /* Make it look like a disabled form field */
   background-color: var(--input-background);
   border: 1px solid var(--border-color-medium);
   border-radius: var(--button-radius);
   padding: 0.75rem 1rem;
-  margin-bottom: 1.5rem; /* Space between this and the next field */
+  margin-bottom: 1.5rem;
   font-size: 0.9rem;
   line-height: 1.5;
 }
 
-/* Style the "Original Comment:" label inside the box */
 .original-post strong {
   display: block;
   color: var(--primary-color);
   font-weight: 600;
-  margin-bottom: 0.35rem; /* Space between label and the comment text */
+  margin-bottom: 0.35rem;
   font-size: 0.8rem;
 }
 
-/* Style the actual comment text */
 .original-post .post-text {
   margin: 0;
   padding: 0;
-  color: #fff; /* Brighter text for the comment */
+  color: #fff;
 }
 
-/* Remove old, conflicting styles */
 .original-post p,
 .original-post em {
   margin: 0;
@@ -731,8 +722,6 @@ body {
   color: inherit;
 }
 
-/* NEW: Add this class to the end of your file */
-body.no-scroll,
-body.no-scroll-modal {
+body.modal-open {
   overflow: hidden;
 }
